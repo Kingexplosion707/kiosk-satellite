@@ -33,7 +33,6 @@ jobs:
         with:
           path: app/android/app/plus-keystore.jks
           key: kiosk-plus-keystore-v1
-          lookup-only: true
 
       - name: Merge upstream
         id: merge
