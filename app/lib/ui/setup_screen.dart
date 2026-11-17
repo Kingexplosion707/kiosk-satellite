@@ -346,8 +346,10 @@ class _SetupScreenState extends State<SetupScreen> {
       _errorHint = null;
     });
     final picked = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: const ['json'],
+      // Any file: a backup saved through a chat app or a cloud drive often
+      // comes back without the JSON type, and the picker would grey it out.
+      // The contents are checked below.
+      type: FileType.any,
       withData: true,
     );
     if (!mounted) return;

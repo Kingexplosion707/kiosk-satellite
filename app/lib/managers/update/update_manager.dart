@@ -105,16 +105,16 @@ class UpdateManager extends Manager {
   /// window is a display cap, not a paging cursor: a device further behind
   /// than this gets the newest releases and a pointer to the history.
   static const _releasesUrl =
-      'https://api.github.com/repos/jxlarrea/kiosk-satellite/'
+      'https://api.github.com/repos/Kingexplosion707/kiosk-satellite/'
       'releases?per_page=30';
 
   /// The page that redirects to the newest stable release, and the folder
   /// the APKs of a release download from. What the check falls back to
   /// when the API refuses the query.
   static const _latestPageUrl =
-      'https://github.com/jxlarrea/kiosk-satellite/releases/latest';
+      'https://github.com/Kingexplosion707/kiosk-satellite/releases/latest';
   static const _downloadsUrl =
-      'https://github.com/jxlarrea/kiosk-satellite/releases/download';
+      'https://github.com/Kingexplosion707/kiosk-satellite/releases/download';
 
   /// The file a custom repository serves in place of the GitHub query:
   /// that query's response, saved as is. Same parser, same ABI selection,
@@ -718,15 +718,16 @@ class UpdateManager extends Manager {
     }
   }
 
-  /// Numeric-triple comparison; suffixes (`-beta`) are ignored, so a
-  /// re-tagged `v0.1.0-beta` never counts as newer than the running `0.1.0`.
+  /// Numeric comparison of the version and the Plus build after it
+  /// (`2026.11.23-plus.5` is 2026, 11, 23, 5), so a newer Plus build of the
+  /// same Kiosk Satellite version counts as newer. Other suffixes are ignored.
   static bool _isNewer(String remote, String current) {
     List<int> nums(String v) => RegExp(
       r'\d+',
-    ).allMatches(v).take(3).map((m) => int.parse(m[0]!)).toList();
+    ).allMatches(v).take(4).map((m) => int.parse(m[0]!)).toList();
     final r = nums(remote);
     final c = nums(current);
-    for (var i = 0; i < 3; i++) {
+    for (var i = 0; i < 4; i++) {
       final a = i < r.length ? r[i] : 0;
       final b = i < c.length ? c[i] : 0;
       if (a != b) return a > b;

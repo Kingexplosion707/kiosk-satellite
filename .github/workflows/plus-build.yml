@@ -87,13 +87,15 @@ jobs:
           # (the first build, made by hand, was 1).
           CODE=$(( BUILD * 1000 + (GITHUB_RUN_NUMBER + 1) % 1000 ))
           flutter build apk --release --build-name="${VERSION}-plus.${GITHUB_RUN_NUMBER}" --build-number="$CODE"
-          mv build/app/outputs/flutter-apk/app-release.apk "../kiosk-satellite-plus-${GITHUB_RUN_NUMBER}.apk"
+          # Named as the in-app updater looks for it: kiosk-satellite-v<version>.apk under tag v<version>.
+          mv build/app/outputs/flutter-apk/app-release.apk "../kiosk-satellite-v${VERSION}-plus.${GITHUB_RUN_NUMBER}.apk"
+          echo "PLUS_VERSION=${VERSION}-plus.${GITHUB_RUN_NUMBER}" >> "$GITHUB_ENV"
 
       - name: Publish
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          TAG="plus-${GITHUB_RUN_NUMBER}"
-          gh release create "$TAG" "kiosk-satellite-plus-${GITHUB_RUN_NUMBER}.apk" \
-            --target "$GITHUB_SHA" --title "Kiosk Satellite Plus ${GITHUB_RUN_NUMBER}" \
-            --notes "Built from $(git log -1 --format=%h). Uninstall the original Kiosk Satellite first: this build is signed with its own key."
+          TAG="v${PLUS_VERSION}"
+          gh release create "$TAG" "kiosk-satellite-v${PLUS_VERSION}.apk" \
+            --target "$GITHUB_SHA" --title "Kiosk Satellite Plus ${PLUS_VERSION}" --latest \
+            --notes "Built from $(git log -1 --format=%h). Installs over the last Plus build, and the app offers it as an update (Settings → About)."

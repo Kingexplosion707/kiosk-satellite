@@ -12,4 +12,4 @@ Behnoud's personal build of Kiosk Satellite (jxlarrea/kiosk-satellite, CC BY-NC-
 - **Updates**: `.github/workflows/upstream-sync.yml` merges jxlarrea/kiosk-satellite into main every six hours, then builds. A conflict opens an issue labelled upstream-sync.
 
 ## Installing
-Uninstall the original Kiosk Satellite first (different signing key); the app ID is unchanged. Spicy Lyrics Plus needs to be installed before the kiosk for the now-playing permission (or reinstall the kiosk after).
+Uninstall the original Kiosk Satellite once (different signing key); after that each Plus build installs over the last, and the app offers new ones itself (Settings → About), from this repository's releases. The config import accepts any file, so a backup that lost its JSON type in a chat app or cloud drive still imports.
