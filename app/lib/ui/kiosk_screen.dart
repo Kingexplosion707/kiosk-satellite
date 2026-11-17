@@ -62,6 +62,8 @@ import 'notification_overlay.dart';
 import 'plugin_overlay.dart';
 import 'navigation_view.dart';
 import 'offline_notice.dart';
+import 'plus_home.dart';
+import 'plus_spicy.dart';
 import 'dlna_media_overlay.dart';
 import 'camera_view_overlay.dart';
 import 'code_scanner.dart';
@@ -216,6 +218,23 @@ class _KioskScreenState extends State<KioskScreen>
   StreamSubscription<KioskBackPressed>? _backSub;
   StreamSubscription<HomeKeyPressed>? _homeSub;
   StreamSubscription<WakeWordDetected>? _wakeSub;
+
+  /// Plus: the native home in front of the dashboard (plus_home.dart), and
+  /// whether it was up when a wake word took it down for the voice UI.
+  final _homeVisible = ValueNotifier<bool>(true);
+  bool _homeBeforeVoice = false;
+  Timer? _homeIdle;
+  StreamSubscription<AssistOverlayVisibility>? _assistHomeSub;
+  StreamSubscription<ScreensaverStateChanged>? _spicySaverSub;
+
+  /// Back to the home after [PlusHome.idleReturn] without a touch.
+  void _armHomeReturn() {
+    _homeIdle?.cancel();
+    if (_homeVisible.value) return;
+    _homeIdle = Timer(PlusHome.idleReturn, () {
+      if (mounted && !c.screensaver.isActive) _homeVisible.value = true;
+    });
+  }
   StreamSubscription<CameraViewStateChanged>? _cameraSub;
   StreamSubscription<ScreensaverStateChanged>? _saverSub;
   StreamSubscription<WebViewRebuildRequested>? _rebuildSub;
@@ -319,6 +338,16 @@ class _KioskScreenState extends State<KioskScreen>
       } else {
         unawaited(c.plugins.closeOverlay(c.plugins.backOverlay!));
       }
+      return;
+    }
+    // Plus: Back over the dashboard goes home first.
+    if (!_homeVisible.value &&
+        _drawer.value == 0 &&
+        !c.screensaver.isActive &&
+        !c.launcher.visible.value &&
+        !c.musicLibrary.visible.value &&
+        c.browser.overlayUrl.value == null) {
+      _homeVisible.value = true;
       return;
     }
     final deadline = _backArmedUntil;
@@ -969,6 +998,29 @@ class _KioskScreenState extends State<KioskScreen>
     _wakeSub = c.bus.on<WakeWordDetected>().listen((_) {
       c.browser.dismissOverlay();
       c.camera.interruptForVoice();
+      // The voice UI lives in the dashboard: the home steps aside for it
+      // and comes back when it closes.
+      if (_homeVisible.value) {
+        _homeBeforeVoice = true;
+        _homeVisible.value = false;
+      }
+    });
+    _assistHomeSub = c.bus.on<AssistOverlayVisibility>().listen((event) {
+      if (!event.visible && _homeBeforeVoice) {
+        _homeBeforeVoice = false;
+        _homeVisible.value = true;
+      }
+    });
+    _homeVisible.addListener(_armHomeReturn);
+    // Plus: the screensaver is Spicy Lyrics Plus's always-on display when it's
+    // installed. The kiosk's own one stops under it, so a tap that closes
+    // Spicy's lands back on the home.
+    _spicySaverSub = c.bus.on<ScreensaverStateChanged>().listen((event) async {
+      if (!event.active) return;
+      if (await SpicyFeed.instance.openAod()) {
+        _homeVisible.value = true;
+        unawaited(c.screensaver.stop());
+      }
     });
     _cameraSub = c.bus.on<CameraViewStateChanged>().listen((_) {
       if (mounted) setState(() {});
@@ -1788,6 +1840,10 @@ class _KioskScreenState extends State<KioskScreen>
     _backSub?.cancel();
     _homeSub?.cancel();
     _wakeSub?.cancel();
+    _assistHomeSub?.cancel();
+    _spicySaverSub?.cancel();
+    _homeIdle?.cancel();
+    _homeVisible.removeListener(_armHomeReturn);
     kioskRouteObserver.unsubscribe(this);
     _cameraSub?.cancel();
     _saverSub?.cancel();
@@ -1875,6 +1931,8 @@ class _KioskScreenState extends State<KioskScreen>
         // everything below in this list (an overlay page, the player) is
         // content that belongs on top of the dashboard, error or not.
         OfflineNotice(container: c),
+        // Plus: the native home over the dashboard, which stays loaded.
+        PlusHome(container: c, visible: _homeVisible, onSettings: _openSettings),
         // Over the offline cover too: with no WebView provider there is no
         // page to wait for, and the cover would hide the only explanation.
         if (c.browser.webViewMissing) const _WebViewMissingNotice(),
@@ -1927,8 +1985,10 @@ class _KioskScreenState extends State<KioskScreen>
       body: CompassGestureLayer(
         controller: _compass,
         child: Listener(
-          onPointerDown: (_) =>
-              c.bus.publish(const ActivityDetected(source: 'touch')),
+          onPointerDown: (_) {
+            c.bus.publish(const ActivityDetected(source: 'touch'));
+            _armHomeReturn();
+          },
           child: AnimatedBuilder(
             animation: _drawer,
             builder: (context, _) {

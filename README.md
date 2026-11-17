@@ -1,3 +1,5 @@
+> **Kiosk Satellite Plus**: a personal build with a native home screen and Spicy Lyrics Plus lyrics, covers and always-on display. See [STATUS.md](STATUS.md). Not for redistribution (CC BY-NC-ND 4.0).
+
 <h1 align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="assets/banners/ks_banner_dark.svg" />

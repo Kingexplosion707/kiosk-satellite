@@ -1,0 +1,61 @@
+name: Upstream sync
+
+# Merges new Kiosk Satellite commits from jxlarrea/kiosk-satellite into main
+# every six hours, keeping every Plus change. A merge that conflicts is left
+# undone and an issue labelled upstream-sync asks for a hand.
+
+on:
+  schedule:
+    - cron: "17 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+  actions: write
+
+concurrency:
+  group: upstream-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Merge upstream
+        id: merge
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git config user.name "kiosk-plus-sync"
+          git config user.email "kiosk-plus-sync@users.noreply.github.com"
+          git remote add upstream https://github.com/jxlarrea/kiosk-satellite.git
+          git fetch upstream main
+          if git merge-base --is-ancestor upstream/main HEAD; then
+            echo "Up to date."
+            exit 0
+          fi
+          if git merge --no-edit upstream/main -m "Merge upstream Kiosk Satellite $(git rev-parse --short upstream/main)"; then
+            # Upstream's own release and housekeeping workflows stay out.
+            git rm -q --ignore-unmatch .github/workflows/release.yml .github/workflows/require-logs.yml .github/workflows/stale.yml
+            git diff --cached --quiet || git commit -q -m "Keep upstream's release workflows out"
+            git push origin HEAD:main
+            # A push by this token doesn't start other workflows: start the build.
+            gh workflow run plus-build.yml --ref main
+          else
+            FILES=$(git diff --name-only --diff-filter=U | sed 's/^/- /')
+            git merge --abort
+            TITLE="Upstream merge needs a hand ($(git rev-parse --short upstream/main))"
+            if ! gh issue list --label upstream-sync --state open --json title --jq '.[].title' | grep -qF "$TITLE"; then
+              gh label create upstream-sync --color FBCA04 2>/dev/null || true
+              gh issue create --label upstream-sync --title "$TITLE" --body "Merging jxlarrea/kiosk-satellite into main conflicts in:
+
+          $FILES
+
+          Resolve it keeping every Plus change (plus_home.dart, plus_spicy.dart, the Plus parts of kiosk_screen.dart, BackgroundBridge.kt and the manifest)."
+            fi
+          fi

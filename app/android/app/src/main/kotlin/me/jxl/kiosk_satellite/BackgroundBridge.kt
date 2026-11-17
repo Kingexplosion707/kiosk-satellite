@@ -202,6 +202,14 @@ class BackgroundBridge(
                 )
                 // The system settings app, for a gesture action (issue #99).
                 "openSystemSettings" -> result.success(openSystemSettings())
+                // Spicy Lyrics Plus: its always-on display as the screensaver,
+                // and what it knows of the song playing (lyrics, animated
+                // cover, Canvas) for the home screen.
+                "openSpicyAod" -> result.success(openSpicyAod())
+                "spicyNowPlaying" -> Thread {
+                    val json = spicyNowPlaying()
+                    Handler(Looper.getMainLooper()).post { result.success(json) }
+                }.start()
                 // The home-launcher role (issue #219). These live on the
                 // engine-scoped bridge on purpose: releasing the role is
                 // the remote rescue for a kiosk whose UI is unreachable,
@@ -1097,6 +1105,31 @@ class BackgroundBridge(
         }
     }
 
+    /// Spicy Lyrics Plus's always-on display, over the kiosk. False when it
+    /// isn't installed (or is too old to offer it).
+    private fun openSpicyAod(): Boolean = try {
+        val intent = Intent(SPICY_AOD_ACTION).setPackage(SPICY_PACKAGE)
+            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        if (intent.resolveActivity(context.packageManager) == null) {
+            false
+        } else {
+            context.startActivity(intent)
+            true
+        }
+    } catch (e: Exception) {
+        android.util.Log.w("kiosk_satellite", "openSpicyAod failed", e)
+        false
+    }
+
+    /// Spicy Lyrics Plus's now playing as JSON, or null without it.
+    private fun spicyNowPlaying(): String? = try {
+        context.contentResolver.query(
+            android.net.Uri.parse("content://$SPICY_PACKAGE.nowplaying"), null, null, null, null,
+        )?.use { cursor -> if (cursor.moveToFirst()) cursor.getString(0) else null }
+    } catch (e: Exception) {
+        null
+    }
+
     /// Open the Android Settings app.
     private fun openSystemSettings(): Boolean = try {
         val intent = Intent(Settings.ACTION_SETTINGS)
@@ -1406,3 +1439,6 @@ class BackgroundBridge(
         }
     }
 }
+
+private const val SPICY_PACKAGE = "com.behnoud.spicylyrics"
+private const val SPICY_AOD_ACTION = "com.behnoud.spicylyrics.action.SHOW_AOD"

@@ -1,0 +1,99 @@
+name: Kiosk Satellite Plus build
+
+# Builds the APK on every push to main and publishes it as a release. Signed
+# with the KIOSK_PLUS_KEYSTORE_BASE64 secret (the key the first build was
+# signed with), else a key made once and kept in the Actions cache, so each
+# build installs over the last.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: plus-build
+  cancel-in-progress: false
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: 3.44.6
+          cache: true
+
+      - name: Signing key from the secret
+        id: secret
+        env:
+          KEYSTORE: ${{ secrets.KIOSK_PLUS_KEYSTORE_BASE64 }}
+        working-directory: app/android/app
+        run: |
+          if [ -n "$KEYSTORE" ]; then
+            echo "$KEYSTORE" | base64 -d > plus-keystore.jks
+            echo "found=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Restore the signing key
+        id: key
+        if: steps.secret.outputs.found != 'true'
+        uses: actions/cache/restore@v4
+        with:
+          path: app/android/app/plus-keystore.jks
+          key: kiosk-plus-keystore-v1
+
+      - name: Make the signing key (first build only)
+        if: steps.secret.outputs.found != 'true' && steps.key.outputs.cache-hit != 'true'
+        working-directory: app/android/app
+        run: |
+          keytool -genkeypair -v -keystore plus-keystore.jks -alias plus -keyalg RSA -keysize 4096 \
+            -validity 20000 -storepass kioskplus -keypass kioskplus -dname "CN=Kiosk Satellite Plus"
+
+      - name: Keep the signing key
+        if: steps.secret.outputs.found != 'true' && steps.key.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: app/android/app/plus-keystore.jks
+          key: kiosk-plus-keystore-v1
+
+      - name: Point the build at the key
+        working-directory: app/android
+        run: |
+          printf 'storePassword=kioskplus\nkeyPassword=kioskplus\nkeyAlias=plus\nstoreFile=plus-keystore.jks\n' > key.properties
+
+      - name: Check the Plus code
+        working-directory: app
+        run: |
+          flutter pub get
+          flutter analyze --no-fatal-infos --no-fatal-warnings lib/ui/plus_home.dart lib/ui/plus_spicy.dart lib/ui/kiosk_screen.dart
+
+      - name: Build the APK
+        working-directory: app
+        run: |
+          VERSION="$(sed -n 's/^version: *\([^+]*\).*/\1/p' pubspec.yaml)"
+          BUILD="$(sed -n 's/^version:.*+//p' pubspec.yaml)"
+          # Above the pubspec's build number, and higher every run, so each build updates the last
+          # (the first build, made by hand, was 1).
+          CODE=$(( BUILD * 1000 + (GITHUB_RUN_NUMBER + 1) % 1000 ))
+          flutter build apk --release --build-name="${VERSION}-plus.${GITHUB_RUN_NUMBER}" --build-number="$CODE"
+          mv build/app/outputs/flutter-apk/app-release.apk "../kiosk-satellite-plus-${GITHUB_RUN_NUMBER}.apk"
+
+      - name: Publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="plus-${GITHUB_RUN_NUMBER}"
+          gh release create "$TAG" "kiosk-satellite-plus-${GITHUB_RUN_NUMBER}.apk" \
+            --target "$GITHUB_SHA" --title "Kiosk Satellite Plus ${GITHUB_RUN_NUMBER}" \
+            --notes "Built from $(git log -1 --format=%h). Uninstall the original Kiosk Satellite first: this build is signed with its own key."
