@@ -399,6 +399,14 @@ const settingOptionMessageIds = <String, Map<String, String>>{
     "25": "alarmsOption25Minutes",
     "30": "alarmsOption30Minutes"
   },
+  "alarms.skip_minutes": {
+    "0": "alarmsOptionOff",
+    "5": "alarmsOption5Minutes",
+    "10": "alarmsOption10Minutes",
+    "15": "alarmsOption15Minutes",
+    "30": "alarmsOption30Minutes",
+    "60": "alarmsOption60Minutes"
+  },
   "voice.realtime_openai_reasoning": {
     "": "voiceRealtimeReasoningDefault",
     "minimal": "voiceRealtimeReasoningMinimal",
@@ -542,6 +550,14 @@ const settingOptionMessageIds = <String, Map<String, String>>{
   "nav.compass_animation": {
     "zoom": "navigationZoom",
     "slide": "navigationSlide"
+  },
+  "voice_match.policy": {
+    "anyone": "voiceMatchOptionAnyone",
+    "enrolled": "voiceMatchOptionEnrolled"
+  },
+  "voice_match.rejected": {
+    "quiet": "voiceMatchOptionQuiet",
+    "chime": "voiceMatchOptionChime"
   }
 };
 const settingPlaceholderMessageIds = <String, String>{

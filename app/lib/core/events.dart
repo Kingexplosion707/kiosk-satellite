@@ -543,6 +543,47 @@ class VoiceInteractionChanged extends AppEvent {
 /// Native Voice Satellite moved between Home Assistant's assist_satellite
 /// states: idle, listening, processing or responding. Covers Assist turns
 /// and realtime conversations alike.
+/// Kiosk Satellite Ground Control became reachable, moved or went away.
+/// [baseUrl] is its http(s) address (no trailing slash), null when there
+/// is none to use: Voice Match off, not found, or the kiosk's token refused.
+class GroundControlServiceChanged extends AppEvent {
+  const GroundControlServiceChanged(this.baseUrl);
+  final String? baseUrl;
+}
+
+/// Who is talking on this kiosk, for the Speaker sensor and the lights.
+/// Empty when nobody is identified (a new turn, an unknown voice).
+class VoiceSpeakerChanged extends AppEvent {
+  const VoiceSpeakerChanged(this.name, {this.color});
+  final String name;
+
+  /// The person's ring color in Voice Match, `#RRGGBB`.
+  final String? color;
+}
+
+/// Voice Match asks this kiosk to record a person's voice (the Voice Match
+/// app started an enrollment here).
+class VoiceMatchEnrollRequested extends AppEvent {
+  const VoiceMatchEnrollRequested({
+    required this.personId,
+    required this.name,
+    this.color,
+    this.targetS = 45,
+  });
+  final String personId;
+  final String name;
+  final String? color;
+  final double targetS;
+}
+
+/// An enrollment on this kiosk changed, as VoiceMatchEnrollment.toJson
+/// gives it (`phase`, `speechS`, `targetS`, `color` ...). Null when the
+/// result card is gone. A `refused` phase never started.
+class VoiceMatchEnrollmentChanged extends AppEvent {
+  const VoiceMatchEnrollmentChanged(this.state);
+  final Map<String, Object?>? state;
+}
+
 class VoiceSatelliteStateChanged extends AppEvent {
   const VoiceSatelliteStateChanged(this.state, {this.announcement = false});
   final String state;

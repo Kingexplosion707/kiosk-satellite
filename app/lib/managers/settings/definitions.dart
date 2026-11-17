@@ -277,6 +277,7 @@ const Map<String, String> subpageHints = {
   // Native Voice Satellite's own pages.
   'Assistant': 'Pipelines, follow-ups',
   'Realtime': 'OpenAI, xAI Grok, Gemini, tools, talk over answers',
+  'Voice Match': 'Who is talking, other voices, enrollment',
   'Conversation': 'What the overlay shows and for how long',
   // Its entry row sits under the tester, not with the three pages above.
   'Wake word diagnostics':
@@ -8099,6 +8100,144 @@ const voiceRealtimeMcpToken = SettingDef<String>(
   dependsOnValue: 'custom',
 );
 
+// Ground Control: Kiosk Satellite Ground Control, a Home Assistant app or
+// Docker container, runs what is too heavy for a kiosk on a capable machine.
+// The kiosk signs in with its Home Assistant token and finds it by mDNS
+// unless an address is set. Its features have their own pages: Voice Match
+// under Voice Satellite.
+
+const groundControlEnabled = SettingDef<bool>(
+  key: 'ground_control.enabled',
+  type: SettingType.boolean,
+  defaultValue: false,
+  title: 'Enable Ground Control',
+  description:
+      'Connect to Kiosk Satellite Ground Control, which runs Voice Match on '
+      'a capable machine.',
+  category: 'Ground Control',
+);
+
+const groundControlAddress = SettingDef<String>(
+  key: 'ground_control.address',
+  type: SettingType.string,
+  defaultValue: '',
+  title: 'Address',
+  description:
+      'Leave empty to find Ground Control on the network. Enter one for '
+      'Ground Control on another network.',
+  category: 'Ground Control',
+  section: 'Connection',
+  placeholder: '192.168.1.10:10900',
+  dependsOn: 'ground_control.enabled',
+);
+
+// Voice Match: Ground Control tells who is talking and when someone else (a
+// TV) starts, so a turn ends at the speaker's last word.
+
+const voiceMatchEnabled = SettingDef<bool>(
+  key: 'voice_match.enabled',
+  type: SettingType.boolean,
+  defaultValue: false,
+  title: 'Enable Voice Match',
+  description:
+      'Recognize who is talking and stop listening when someone else takes '
+      'over. Needs Ground Control.',
+  category: 'Voice Satellite',
+  subpage: 'Voice Match',
+  dependsOn: 'voice.enabled',
+  alsoDependsOn: 'ground_control.enabled',
+);
+
+/// Who this kiosk answers: anyone, or only voices enrolled in Voice Match.
+const voiceMatchPolicy = SettingDef<String>(
+  key: 'voice_match.policy',
+  type: SettingType.select,
+  defaultValue: 'anyone',
+  title: 'Answer',
+  description: 'Enrolled voices only ignores the TV and guests.',
+  category: 'Voice Satellite',
+  subpage: 'Voice Match',
+  section: 'Listening',
+  options: ['anyone', 'enrolled'],
+  optionLabels: {'anyone': 'Anyone', 'enrolled': 'Enrolled voices only'},
+  dependsOn: 'voice_match.enabled',
+);
+
+const voiceMatchRejected = SettingDef<String>(
+  key: 'voice_match.rejected',
+  type: SettingType.select,
+  defaultValue: 'quiet',
+  title: 'Voice not enrolled',
+  description: 'What happens when someone else says the wake word.',
+  category: 'Voice Satellite',
+  subpage: 'Voice Match',
+  section: 'Listening',
+  options: ['quiet', 'chime'],
+  optionLabels: {'quiet': 'Stay quiet', 'chime': 'Play the error chime'},
+  dependsOn: 'voice_match.policy',
+  dependsOnValue: 'enrolled',
+);
+
+const voiceMatchEndOnOtherVoice = SettingDef<bool>(
+  key: 'voice_match.end_on_other_voice',
+  type: SettingType.boolean,
+  defaultValue: true,
+  title: 'End when someone else talks',
+  description:
+      'Stops listening at the last word when the TV or another person keeps '
+      'talking.',
+  category: 'Voice Satellite',
+  subpage: 'Voice Match',
+  section: 'Listening',
+  dependsOn: 'voice_match.enabled',
+);
+
+/// A Speaker text sensor on this kiosk's ESPHome device, for automations
+/// and LLM agents (they read it with GetLiveContext on each turn).
+const voiceMatchSpeakerSensor = SettingDef<bool>(
+  key: 'voice_match.speaker_sensor',
+  type: SettingType.boolean,
+  defaultValue: true,
+  title: 'Speaker sensor',
+  description:
+      'Adds a Speaker sensor to this kiosk in Home Assistant, for automations '
+      'and agent instructions.',
+  category: 'Voice Satellite',
+  subpage: 'Voice Match',
+  section: 'Speaker',
+  dependsOn: 'voice_match.enabled',
+);
+
+const voiceMatchShowSpeaker = SettingDef<bool>(
+  key: 'voice_match.show_speaker',
+  type: SettingType.boolean,
+  defaultValue: true,
+  title: 'Show who is talking',
+  description:
+      "The speaker's name before the command on the voice overlay, in their "
+      'color. On a device with a light ring, the listening arc takes the '
+      'color.',
+  category: 'Voice Satellite',
+  subpage: 'Voice Match',
+  section: 'Speaker',
+  dependsOn: 'voice_match.enabled',
+);
+
+const voiceMatchAllowEnroll = SettingDef<bool>(
+  key: 'voice_match.allow_enroll',
+  type: SettingType.boolean,
+  defaultValue: true,
+  title: 'Allow enrollment here',
+  description:
+      "Lets the Ground Control app record a person's voice with this kiosk's "
+      'microphone. The kiosk shows the text to read, or the light ring '
+      'shows the progress.',
+  category: 'Voice Satellite',
+  subpage: 'Voice Match',
+  section: 'Speaker',
+  dependsOn: 'voice_match.enabled',
+);
+
 /// The mirrored selects by the key the kiosk's device gives each one.
 const voiceHaSelectSettings = <String, SettingDef<String>>{
   'pipeline': voiceHaPipeline,
@@ -12541,6 +12680,29 @@ const alarmsSunriseMinutes = SettingDef<String>(
   },
 );
 
+/// How long before an alarm the Clock and Weather Mood screensavers show a
+/// Skip button for its next ring (issue #1479). 0 is Off.
+const alarmsSkipMinutes = SettingDef<String>(
+  key: 'alarms.skip_minutes',
+  type: SettingType.select,
+  defaultValue: '10',
+  title: 'Skip button',
+  description:
+      'How long before an alarm the Clock and Weather Mood screensavers '
+      'show a button to skip it.',
+  category: 'Alarms',
+  section: 'Defaults',
+  options: ['0', '5', '10', '15', '30', '60'],
+  optionLabels: {
+    '0': 'Off',
+    '5': '5 minutes',
+    '10': '10 minutes',
+    '15': '15 minutes',
+    '30': '30 minutes',
+    '60': '60 minutes',
+  },
+);
+
 /// The Home Assistant text to speech entity an alarm speaks its phrase
 /// with; empty picks the first one Home Assistant has. Picked from the
 /// list, never typed, like the Announcements engine.
@@ -14803,6 +14965,15 @@ const List<SettingDef<Object>> allSettings = [
   voiceRealtimeTools,
   voiceRealtimeMcpUrl,
   voiceRealtimeMcpToken,
+  groundControlEnabled,
+  groundControlAddress,
+  voiceMatchEnabled,
+  voiceMatchPolicy,
+  voiceMatchRejected,
+  voiceMatchEndOnOtherVoice,
+  voiceMatchSpeakerSensor,
+  voiceMatchShowSpeaker,
+  voiceMatchAllowEnroll,
   voiceWakeWordSensitivity,
   voiceWakeWordFineTune,
   voiceNoiseGate,
@@ -15089,6 +15260,7 @@ const List<SettingDef<Object>> allSettings = [
   alarmsSnoozeMinutes,
   alarmsSilenceAfterMinutes,
   alarmsSunriseMinutes,
+  alarmsSkipMinutes,
   alarmsPhrase,
   alarmsTtsEngine,
   alarmsTtsLanguage,

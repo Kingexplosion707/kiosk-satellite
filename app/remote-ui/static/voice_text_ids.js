@@ -317,5 +317,18 @@ export const voiceTextMessageIds = {
   "Not configured": "voiceRealtimeNotConfigured",
   "Not validated": "voiceRealtimeNotValidated",
   "Connection validated": "voiceRealtimeValidated",
-  "Wake, done, error and announcement sounds": "voiceChimesSoundsHint"
+  "Wake, done, error and announcement sounds": "voiceChimesSoundsHint",
+  "Voice Match": "voiceMatch",
+  "Who is talking, other voices, enrollment": "voiceMatchHint",
+  "Connecting": "voiceMatchConnecting",
+  "Searching": "voiceMatchSearching",
+  "Not reachable": "voiceMatchNotReachable",
+  "Sign-in refused": "voiceMatchSignInRefused",
+  "Nobody is enrolled yet.": "voiceMatchNobodyEnrolled",
+  "Home Assistant refused this kiosk's token.": "voiceMatchTokenRefused",
+  "People, enrollment, sessions and settings.": "voiceMatchAppHint",
+  "Open": "voiceMatchOpen",
+  "Looking for Ground Control on the network.": "groundControlLooking",
+  "Ground Control app": "groundControlApp",
+  "Ground Control": "settingsMenuGroundControl"
 };
