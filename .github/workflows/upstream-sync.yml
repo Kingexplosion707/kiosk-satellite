@@ -26,6 +26,15 @@ jobs:
         with:
           fetch-depth: 0
 
+      # Reading the build's signing key keeps it in the Actions cache, which
+      # drops what goes unread for a week: a lost key would stop updates installing.
+      - name: Keep the signing key from expiring
+        uses: actions/cache/restore@v4
+        with:
+          path: app/android/app/plus-keystore.jks
+          key: kiosk-plus-keystore-v1
+          lookup-only: true
+
       - name: Merge upstream
         id: merge
         env:
