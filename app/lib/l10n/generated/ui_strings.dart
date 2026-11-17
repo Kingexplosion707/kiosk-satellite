@@ -446,6 +446,12 @@ abstract class UiStrings {
   /// **'Alarm at {time}'**
   String alarmsAt(String time);
 
+  /// Button under the screensaver clock shortly before an alarm. Skips that one ring. {time} is a clock time.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip {time} alarm'**
+  String alarmsSkipAlarm(String time);
+
   /// Screensaver corner widget that shows the next alarm.
   ///
   /// In en, this message translates to:
@@ -9028,6 +9034,18 @@ abstract class UiStrings {
   /// **'How long the screen takes to brighten before a sunrise alarm.'**
   String get settingAlarmsSunriseMinutesDescription;
 
+  /// Setting label.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip button'**
+  String get settingAlarmsSkipMinutesTitle;
+
+  /// Setting description.
+  ///
+  /// In en, this message translates to:
+  /// **'How long before an alarm the Clock and Weather Mood screensavers show a button to skip it.'**
+  String get settingAlarmsSkipMinutesDescription;
+
   /// Setting option: a length in minutes.
   ///
   /// In en, this message translates to:
@@ -9063,6 +9081,18 @@ abstract class UiStrings {
   /// In en, this message translates to:
   /// **'30 minutes'**
   String get alarmsOption30Minutes;
+
+  /// Setting option: a length in minutes.
+  ///
+  /// In en, this message translates to:
+  /// **'60 minutes'**
+  String get alarmsOption60Minutes;
+
+  /// Setting option: the Skip button never shows.
+  ///
+  /// In en, this message translates to:
+  /// **'Off'**
+  String get alarmsOptionOff;
 
   /// Settings category name.
   ///
@@ -14759,6 +14789,42 @@ abstract class UiStrings {
   /// **'{seconds} s'**
   String gestureHoldSeconds(String seconds);
 
+  /// Translate the visible label or help. Keep Ground Control, Voice Match, Voice Satellite, Kiosk Satellite and Home Assistant unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable Ground Control'**
+  String get settingGroundControlEnabledTitle;
+
+  /// Translate the visible label or help. Keep Ground Control, Voice Match, Voice Satellite, Kiosk Satellite and Home Assistant unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect to Kiosk Satellite Ground Control, which runs Voice Match on a capable machine.'**
+  String get settingGroundControlEnabledDescription;
+
+  /// Translate the visible label or help. Keep Ground Control, Voice Match, Voice Satellite, Kiosk Satellite and Home Assistant unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Address'**
+  String get settingGroundControlAddressTitle;
+
+  /// Translate the visible label or help. Keep Ground Control, Voice Match, Voice Satellite, Kiosk Satellite and Home Assistant unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave empty to find Ground Control on the network. Enter one for Ground Control on another network.'**
+  String get settingGroundControlAddressDescription;
+
+  /// Translate the visible label or help. Keep Ground Control, Voice Match, Voice Satellite, Kiosk Satellite and Home Assistant unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Looking for Ground Control on the network.'**
+  String get groundControlLooking;
+
+  /// Translate the visible label or help. Keep Ground Control, Voice Match, Voice Satellite, Kiosk Satellite and Home Assistant unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Ground Control app'**
+  String get groundControlApp;
+
   /// Name of the settings page and of the dashboard picker entry that lists a person's own HTML pages hosted in Home Assistant.
   ///
   /// In en, this message translates to:
@@ -19000,6 +19066,18 @@ abstract class UiStrings {
   /// In en, this message translates to:
   /// **'Hold Mode'**
   String get compassHoldMode;
+
+  /// Kiosk Satellite Ground Control, the companion app that runs Voice Match on a capable machine. A product name: keep Ground Control unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Ground Control'**
+  String get settingsMenuGroundControl;
+
+  /// Summary under the Ground Control entry. Keep Voice Match unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Voice Match on a capable machine'**
+  String get settingsMenuGroundControlSummary;
 
   /// Setting label.
   ///
@@ -27077,6 +27155,174 @@ abstract class UiStrings {
   /// **'Keep the screensaver from starting while the Timers view shows a running timer.'**
   String get settingTimersPauseScreensaverDescription;
 
+  /// Translate the visible label or help. Keep Voice Match, Voice Satellite, Kiosk Satellite, Home Assistant and ESPHome unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Voice Match'**
+  String get voiceMatch;
+
+  /// Translate the visible label or help. Keep Voice Match, Voice Satellite, Kiosk Satellite, Home Assistant and ESPHome unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Who is talking, other voices, enrollment'**
+  String get voiceMatchHint;
+
+  /// Translate the visible label or help. Keep Voice Match, Voice Satellite, Kiosk Satellite, Home Assistant and ESPHome unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable Voice Match'**
+  String get settingVoiceMatchEnabledTitle;
+
+  /// Translate the visible label or help. Keep Voice Match, Voice Satellite, Kiosk Satellite, Home Assistant and ESPHome unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Answer'**
+  String get settingVoiceMatchPolicyTitle;
+
+  /// Translate the visible label or help. Keep Voice Match, Voice Satellite, Kiosk Satellite, Home Assistant and ESPHome unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Enrolled voices only ignores the TV and guests.'**
+  String get settingVoiceMatchPolicyDescription;
+
+  /// Translate the visible label or help. Keep Voice Match, Voice Satellite, Kiosk Satellite, Home Assistant and ESPHome unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Voice not enrolled'**
+  String get settingVoiceMatchRejectedTitle;
+
+  /// Translate the visible label or help. Keep Voice Match, Voice Satellite, Kiosk Satellite, Home Assistant and ESPHome unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'What happens when someone else says the wake word.'**
+  String get settingVoiceMatchRejectedDescription;
+
+  /// Translate the visible label or help. Keep Voice Match, Voice Satellite, Kiosk Satellite, Home Assistant and ESPHome unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'End when someone else talks'**
+  String get settingVoiceMatchEndOnOtherVoiceTitle;
+
+  /// Translate the visible label or help. Keep Voice Match, Voice Satellite, Kiosk Satellite, Home Assistant and ESPHome unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Stops listening at the last word when the TV or another person keeps talking.'**
+  String get settingVoiceMatchEndOnOtherVoiceDescription;
+
+  /// Translate the visible label or help. Keep Voice Match, Voice Satellite, Kiosk Satellite, Home Assistant and ESPHome unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Speaker sensor'**
+  String get settingVoiceMatchSpeakerSensorTitle;
+
+  /// Translate the visible label or help. Keep Voice Match, Voice Satellite, Kiosk Satellite, Home Assistant and ESPHome unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Adds a Speaker sensor to this kiosk in Home Assistant, for automations and agent instructions.'**
+  String get settingVoiceMatchSpeakerSensorDescription;
+
+  /// Translate the visible label or help. Keep Voice Match, Voice Satellite, Kiosk Satellite, Home Assistant and ESPHome unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Anyone'**
+  String get voiceMatchOptionAnyone;
+
+  /// Translate the visible label or help. Keep Voice Match, Voice Satellite, Kiosk Satellite, Home Assistant and ESPHome unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Enrolled voices only'**
+  String get voiceMatchOptionEnrolled;
+
+  /// Translate the visible label or help. Keep Voice Match, Voice Satellite, Kiosk Satellite, Home Assistant and ESPHome unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Stay quiet'**
+  String get voiceMatchOptionQuiet;
+
+  /// Translate the visible label or help. Keep Voice Match, Voice Satellite, Kiosk Satellite, Home Assistant and ESPHome unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Play the error chime'**
+  String get voiceMatchOptionChime;
+
+  /// Translate the visible label or help. Keep Voice Match, Voice Satellite, Kiosk Satellite, Home Assistant and ESPHome unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Connecting'**
+  String get voiceMatchConnecting;
+
+  /// Translate the visible label or help. Keep Voice Match, Voice Satellite, Kiosk Satellite, Home Assistant and ESPHome unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Searching'**
+  String get voiceMatchSearching;
+
+  /// Translate the visible label or help. Keep Voice Match, Voice Satellite, Kiosk Satellite, Home Assistant and ESPHome unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Not reachable'**
+  String get voiceMatchNotReachable;
+
+  /// Translate the visible label or help. Keep Voice Match, Voice Satellite, Kiosk Satellite, Home Assistant and ESPHome unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign-in refused'**
+  String get voiceMatchSignInRefused;
+
+  /// Translate the visible label or help. Keep Voice Match, Voice Satellite, Kiosk Satellite, Home Assistant and ESPHome unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Nobody is enrolled yet.'**
+  String get voiceMatchNobodyEnrolled;
+
+  /// Translate the visible label or help. Keep Voice Match, Voice Satellite, Kiosk Satellite, Home Assistant and ESPHome unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Home Assistant refused this kiosk\'s token.'**
+  String get voiceMatchTokenRefused;
+
+  /// Translate the visible label or help. Keep Voice Match, Voice Satellite, Kiosk Satellite, Home Assistant and ESPHome unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Show who is talking'**
+  String get settingVoiceMatchShowSpeakerTitle;
+
+  /// Translate the visible label or help. Keep Voice Match, Voice Satellite, Kiosk Satellite, Home Assistant and ESPHome unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'The speaker\'s name before the command on the voice overlay, in their color. On a device with a light ring, the listening arc takes the color.'**
+  String get settingVoiceMatchShowSpeakerDescription;
+
+  /// Translate the visible label or help. Keep Voice Match, Voice Satellite, Kiosk Satellite, Home Assistant and ESPHome unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow enrollment here'**
+  String get settingVoiceMatchAllowEnrollTitle;
+
+  /// Translate the visible label or help. Keep Voice Match, Voice Satellite, Kiosk Satellite, Home Assistant and ESPHome unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'People, enrollment, sessions and settings.'**
+  String get voiceMatchAppHint;
+
+  /// Translate the visible label or help. Keep Voice Match, Voice Satellite, Kiosk Satellite, Home Assistant and ESPHome unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Open'**
+  String get voiceMatchOpen;
+
+  /// Translate the visible label or help. Keep Ground Control, Voice Match, Voice Satellite, Kiosk Satellite and Home Assistant unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Recognize who is talking and stop listening when someone else takes over. Needs Ground Control.'**
+  String get settingVoiceMatchEnabledDescriptionGroundControl;
+
+  /// Translate the visible label or help. Keep Ground Control, Voice Match, Voice Satellite, Kiosk Satellite and Home Assistant unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Lets the Ground Control app record a person\'s voice with this kiosk\'s microphone. The kiosk shows the text to read, or the light ring shows the progress.'**
+  String get settingVoiceMatchAllowEnrollDescriptionGroundControl;
+
   /// Translate the visible label or help. Keep model names and technical identifiers unchanged.
   ///
   /// In en, this message translates to:
@@ -28864,6 +29110,192 @@ abstract class UiStrings {
   /// In en, this message translates to:
   /// **'Pick an MP3, OGG, WAV, FLAC, M4A or AAC file.'**
   String get intercomSoundFormats;
+
+  /// Shown full screen on the kiosk while a person reads aloud to enroll their voice in Voice Match. Keep Voice Match unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Enrolling {name}'**
+  String voiceMatchEnrollTitle(String name);
+
+  /// Shown full screen on the kiosk while a person reads aloud to enroll their voice in Voice Match. Keep Voice Match unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Getting ready…'**
+  String get voiceMatchEnrollStarting;
+
+  /// Shown full screen on the kiosk while a person reads aloud to enroll their voice in Voice Match. Keep Voice Match unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Read this aloud'**
+  String get voiceMatchEnrollReading;
+
+  /// Shown full screen on the kiosk while a person reads aloud to enroll their voice in Voice Match. Keep Voice Match unchanged. Seconds of speech recorded out of the seconds needed.
+  ///
+  /// In en, this message translates to:
+  /// **'{seconds} of {target} s'**
+  String voiceMatchEnrollSeconds(String seconds, String target);
+
+  /// Shown full screen on the kiosk while a person reads aloud to enroll their voice in Voice Match. Keep Voice Match unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Another voice is talking. That part is left out.'**
+  String get voiceMatchEnrollOtherVoice;
+
+  /// Shown full screen on the kiosk while a person reads aloud to enroll their voice in Voice Match. Keep Voice Match unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Saving…'**
+  String get voiceMatchEnrollSaving;
+
+  /// Shown full screen on the kiosk while a person reads aloud to enroll their voice in Voice Match. Keep Voice Match unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop'**
+  String get voiceMatchEnrollStop;
+
+  /// Shown full screen on the kiosk while a person reads aloud to enroll their voice in Voice Match. Keep Voice Match unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Walk slowly around the room'**
+  String get voiceMatchEnrollTipWalk;
+
+  /// Shown full screen on the kiosk while a person reads aloud to enroll their voice in Voice Match. Keep Voice Match unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn away from the kiosk now and then'**
+  String get voiceMatchEnrollTipTurn;
+
+  /// Shown full screen on the kiosk while a person reads aloud to enroll their voice in Voice Match. Keep Voice Match unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Talk the way you give commands'**
+  String get voiceMatchEnrollTipTalk;
+
+  /// Shown full screen on the kiosk while a person reads aloud to enroll their voice in Voice Match. Keep Voice Match unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} is enrolled'**
+  String voiceMatchEnrollDone(String name);
+
+  /// Shown full screen on the kiosk while a person reads aloud to enroll their voice in Voice Match. Keep Voice Match unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'{seconds} s of speech added.'**
+  String voiceMatchEnrollDoneDetail(String seconds);
+
+  /// Shown full screen on the kiosk while a person reads aloud to enroll their voice in Voice Match. Keep Voice Match unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing was saved'**
+  String get voiceMatchEnrollFailed;
+
+  /// Shown full screen on the kiosk while a person reads aloud to enroll their voice in Voice Match. Keep Voice Match unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Too little speech to save. Read for at least 10 seconds.'**
+  String get voiceMatchEnrollTooShort;
+
+  /// Shown full screen on the kiosk while a person reads aloud to enroll their voice in Voice Match. Keep Voice Match unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'The connection to Voice Match was lost.'**
+  String get voiceMatchEnrollLost;
+
+  /// Shown full screen on the kiosk while a person reads aloud to enroll their voice in Voice Match. Keep Voice Match unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'The microphone is not available.'**
+  String get voiceMatchEnrollNoMic;
+
+  /// Shown full screen on the kiosk while a person reads aloud to enroll their voice in Voice Match. Keep Voice Match unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Stopped before anything was recorded.'**
+  String get voiceMatchEnrollStopped;
+
+  /// One sentence of the passage a person reads aloud to enroll their voice. Translate it as a natural sentence a person would say at home. It does not need to match the English word for word.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn on the kitchen lights.'**
+  String get voiceMatchEnrollPassage1;
+
+  /// One sentence of the passage a person reads aloud to enroll their voice. Translate it as a natural sentence a person would say at home. It does not need to match the English word for word.
+  ///
+  /// In en, this message translates to:
+  /// **'Set a timer for ten minutes.'**
+  String get voiceMatchEnrollPassage2;
+
+  /// One sentence of the passage a person reads aloud to enroll their voice. Translate it as a natural sentence a person would say at home. It does not need to match the English word for word.
+  ///
+  /// In en, this message translates to:
+  /// **'What is the weather like tomorrow?'**
+  String get voiceMatchEnrollPassage3;
+
+  /// One sentence of the passage a person reads aloud to enroll their voice. Translate it as a natural sentence a person would say at home. It does not need to match the English word for word.
+  ///
+  /// In en, this message translates to:
+  /// **'Add milk and eggs to the shopping list.'**
+  String get voiceMatchEnrollPassage4;
+
+  /// One sentence of the passage a person reads aloud to enroll their voice. Translate it as a natural sentence a person would say at home. It does not need to match the English word for word.
+  ///
+  /// In en, this message translates to:
+  /// **'Play some quiet music in the living room.'**
+  String get voiceMatchEnrollPassage5;
+
+  /// One sentence of the passage a person reads aloud to enroll their voice. Translate it as a natural sentence a person would say at home. It does not need to match the English word for word.
+  ///
+  /// In en, this message translates to:
+  /// **'The morning was cold, so we stayed inside and made pancakes.'**
+  String get voiceMatchEnrollPassage6;
+
+  /// One sentence of the passage a person reads aloud to enroll their voice. Translate it as a natural sentence a person would say at home. It does not need to match the English word for word.
+  ///
+  /// In en, this message translates to:
+  /// **'Later we walked to the park and watched the dogs chase each other across the grass.'**
+  String get voiceMatchEnrollPassage7;
+
+  /// One sentence of the passage a person reads aloud to enroll their voice. Translate it as a natural sentence a person would say at home. It does not need to match the English word for word.
+  ///
+  /// In en, this message translates to:
+  /// **'In the evening the wind picked up and we lit a fire.'**
+  String get voiceMatchEnrollPassage8;
+
+  /// One sentence of the passage a person reads aloud to enroll their voice. Translate it as a natural sentence a person would say at home. It does not need to match the English word for word.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn off all the lights downstairs.'**
+  String get voiceMatchEnrollPassage9;
+
+  /// One sentence of the passage a person reads aloud to enroll their voice. Translate it as a natural sentence a person would say at home. It does not need to match the English word for word.
+  ///
+  /// In en, this message translates to:
+  /// **'What time is it in Tokyo?'**
+  String get voiceMatchEnrollPassage10;
+
+  /// One sentence of the passage a person reads aloud to enroll their voice. Translate it as a natural sentence a person would say at home. It does not need to match the English word for word.
+  ///
+  /// In en, this message translates to:
+  /// **'Remind me to call the dentist on Monday.'**
+  String get voiceMatchEnrollPassage11;
+
+  /// One sentence of the passage a person reads aloud to enroll their voice. Translate it as a natural sentence a person would say at home. It does not need to match the English word for word.
+  ///
+  /// In en, this message translates to:
+  /// **'How long will it take to drive to the airport?'**
+  String get voiceMatchEnrollPassage12;
+
+  /// One sentence of the passage a person reads aloud to enroll their voice. Translate it as a natural sentence a person would say at home. It does not need to match the English word for word.
+  ///
+  /// In en, this message translates to:
+  /// **'Pause the music.'**
+  String get voiceMatchEnrollPassage13;
+
+  /// One sentence of the passage a person reads aloud to enroll their voice. Translate it as a natural sentence a person would say at home. It does not need to match the English word for word.
+  ///
+  /// In en, this message translates to:
+  /// **'Good night.'**
+  String get voiceMatchEnrollPassage14;
 
   /// Translate the visible label or help. Keep Voice Satellite, Kiosk Satellite, Home Assistant, ESPHome, HACS and model names unchanged.
   ///

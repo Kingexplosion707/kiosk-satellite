@@ -9,6 +9,7 @@ import 'package:http/http.dart' as http;
 
 import '../../core/command_registry.dart';
 import '../../core/events.dart';
+import '../../core/headless.dart';
 import '../../core/manager.dart';
 import '../btproxy/bt_proxy_manager.dart';
 import '../analytics/usage_counters.dart';
@@ -31,6 +32,8 @@ import 'realtime/realtime_player.dart';
 import 'realtime/realtime_session.dart';
 import 'realtime/realtime_tools.dart';
 import 'remote_speaker.dart';
+import 'voice_match_client.dart';
+import 'voice_match_enroll.dart';
 import 'voice_notice.dart';
 import 'voice_session.dart';
 import 'wake_catalog.dart';
@@ -90,6 +93,11 @@ class VoiceManager extends Manager {
 
   /// What the assist overlay draws.
   final view = ValueNotifier<AssistView>(AssistView.hidden);
+
+  /// A Voice Match enrollment on this kiosk: the reading screen while it
+  /// records, then its result card for a few seconds. Null otherwise.
+  final enrollment = ValueNotifier<VoiceMatchEnrollment?>(null);
+  late final VoiceMatchEnroller _enroller;
 
   /// Whether the overlay hides everything under it: a full screen turn
   /// with an opaque backdrop, or a see-through one once its blurred
@@ -330,7 +338,13 @@ class VoiceManager extends Manager {
         .toInt(),
     stopWord: _settings.get(defs.voiceStopWord) && _wakeWord.stopWordAvailable,
     remoteSpeech: _settings.get(defs.voiceTtsOutput).trim().isNotEmpty,
+    matchEndOnOtherVoice: _settings.get(defs.voiceMatchEndOnOtherVoice),
+    matchRejectChime: _settings.get(defs.voiceMatchRejected) == 'chime',
   );
+
+  /// Kiosk Satellite Ground Control's address while it is connected, from
+  /// GroundControlManager.
+  String? _groundControlUrl;
 
   @override
   Future<void> init() async {
@@ -356,6 +370,18 @@ class VoiceManager extends Manager {
       onIntentEnd: (conversation) => unawaited(_readChatLog(conversation)),
       onTrace: _trace,
       onIdle: _resumeWake,
+      voiceMatch: _VoiceMatch(this),
+      onSpeaker: (e) => bus.publish(
+        VoiceSpeakerChanged(
+          '${e?['name'] ?? ''}',
+          color: e?['color'] is String ? e!['color'] as String : null,
+        ),
+      ),
+    );
+    _subs.add(
+      bus.on<GroundControlServiceChanged>().listen(
+        (e) => _groundControlUrl = e.baseUrl,
+      ),
     );
     _realtime = RealtimeSession(
       backend: _realtimeBackend,
@@ -381,6 +407,35 @@ class VoiceManager extends Manager {
       },
       onIdle: _resumeWake,
       location: realtimeLocation,
+    );
+    _enroller = VoiceMatchEnroller(
+      mic: _WakeMic(_wakeWord),
+      openSocket: _openEnrollSocket,
+      chime: (kind) async {
+        final played = await _Player(commands).chime(kind);
+        if (played == null) return;
+        await Future<void>.delayed(
+          Duration(milliseconds: (played.$2 * 1000).round()),
+        );
+      },
+      onChanged: _onEnrollment,
+      pauseWake: () => _wakeWord.setActive(false),
+      resumeWake: _resumeWake,
+      log: (line) => log.info(name, 'voice match: $line'),
+    );
+    _subs.add(bus.on<VoiceMatchEnrollRequested>().listen(_onEnrollRequest));
+    commands.register(
+      Command(
+        name: 'voiceMatchEnrollStop',
+        description:
+            'Stop the Voice Match enrollment recording on this kiosk. What '
+            'was recorded is kept when it is at least 10 seconds of speech',
+        handler: (_) async {
+          if (!_enroller.active) return CommandResult.fail('not enrolling');
+          await _enroller.stop();
+          return CommandResult.ok();
+        },
+      ),
     );
     _esphome.onVoice = _onVoice;
     _esphome.onVoiceConfiguration = _configuration;
@@ -2917,7 +2972,77 @@ class VoiceManager extends Manager {
     _session.dismiss();
   }
 
+  // ── Voice Match enrollment ─────────────────────────────────────────────
+
+  void _onEnrollRequest(VoiceMatchEnrollRequested e) {
+    final request = EnrollRequest(
+      personId: e.personId,
+      name: e.name,
+      color: e.color,
+      targetS: e.targetS,
+    );
+    // The kiosk records with the wake word engine's microphone, the one
+    // the voice turns use.
+    final refuse = !enabled || _groundControlUrl == null
+        ? 'no_mic'
+        : _settings.get(defs.voiceMute)
+        ? 'muted'
+        : busy || _ringing.isNotEmpty || _sharedRinging
+        ? 'busy'
+        : null;
+    unawaited(_enroller.start(request, refuse: refuse));
+  }
+
+  EnrollSocketPort _openEnrollSocket(
+    EnrollRequest request,
+    void Function(Map<String, Object?> event) onEvent,
+  ) {
+    final s = _settings;
+    final deviceName = s.get(defs.deviceName).trim();
+    return EnrollSocket.open(
+      baseUrl: _groundControlUrl ?? '',
+      token: s.get(defs.haToken),
+      request: request,
+      deviceId: defs.effectiveHostname(s.get(defs.deviceHostname), deviceName),
+      deviceName: deviceName,
+      model: '',
+      onEvent: onEvent,
+      log: (line) => log.info(name, line),
+    );
+  }
+
+  bool _enrollHeld = false;
+
+  void _onEnrollment(VoiceMatchEnrollment? state) {
+    bus.publish(VoiceMatchEnrollmentChanged(state?.toJson()));
+    if (state?.phase == EnrollPhase.refused) return;
+    final was = enrollment.value;
+    enrollment.value = state;
+    // While recording it is a voice interaction: music ducks and the
+    // screensaver waits, as for a voice turn.
+    final hold = state?.active ?? false;
+    if (hold != _enrollHeld) {
+      _enrollHeld = hold;
+      bus.publish(
+        VoiceInteractionChanged(
+          active: hold,
+          reason: 'voice_match_enroll',
+          source: InteractionSource.native,
+        ),
+      );
+    }
+    if (was == null && state != null && !Headless.active) {
+      unawaited(commands.execute('screenOn', const {}));
+      unawaited(
+        commands.execute('bringToFront', const {'voiceInteraction': true}),
+      );
+    }
+  }
+
   void _onBusy(bool busy, String reason) {
+    // A voice turn, an announcement or a ringing timer needs the kiosk:
+    // an enrollment stops and keeps what it has.
+    if (busy && _enroller.active) unawaited(_enroller.interrupt());
     // The remote admin's status rows say Busy for the whole turn: the wake
     // word's microphone stays open through it, so nothing else moves them.
     _announceStatus();
@@ -3631,13 +3756,15 @@ class VoiceManager extends Manager {
   bool _sharedRinging = false;
 
   /// While a timer rings, this kiosk's own or a shared one, the stop word
-  /// listens and the screen is held as for a voice turn.
+  /// listens and the screen is held as for a voice turn. The ring holds the
+  /// stop word under its own name: an announcement or a turn that ends
+  /// while it rings lets go of the voice holder only (issue #1478).
   void _syncTimerHold() {
     if (_ringing.isNotEmpty || _sharedRinging) {
       _onBusy(true, 'timer');
-      unawaited(_wakeWord.setStopWordArmed(true));
+      unawaited(_wakeWord.setStopWordArmed(true, holder: 'timer'));
     } else {
-      unawaited(_wakeWord.setStopWordArmed(false));
+      unawaited(_wakeWord.setStopWordArmed(false, holder: 'timer'));
       if (_busyReasons.remove('timer')) {
         bus.publish(
           const VoiceInteractionChanged(
@@ -3944,6 +4071,7 @@ class VoiceManager extends Manager {
 
   @override
   Future<void> dispose() async {
+    _enroller.dispose();
     _intents.setMethodCallHandler(null);
     homeAssistant.removeListener(_announceStatus);
     homeAssistant.removeListener(_watchSelects);
@@ -4024,6 +4152,9 @@ class _EspLink implements VoiceLinkPort {
   }
 
   @override
+  Future<bool> audioEnd() => _esphome.voiceAudio(Uint8List(0), end: true);
+
+  @override
   Future<bool> finished() => _esphome.voiceAnnounceFinished();
 }
 
@@ -4094,4 +4225,41 @@ String realtimeLocationLine({required String name, required String area}) {
     "The device is in the $area area. When the user doesn't name an area, "
         'use this one.',
   ].join(' ');
+}
+
+/// Voice Match sessions for the Assist turns, in live mode: the kiosk's own
+/// audio keeps going to Home Assistant and a copy goes to the service.
+class _VoiceMatch implements VoiceMatchPort {
+  _VoiceMatch(this._voice);
+  final VoiceManager _voice;
+
+  @override
+  VoiceMatchTurnPort? begin(void Function(Map<String, Object?> event) onEvent) {
+    final url = _voice._groundControlUrl;
+    final s = _voice._settings;
+    // The address is only known while Ground Control is connected.
+    if (url == null || !s.get(defs.voiceMatchEnabled)) return null;
+    final name = s.get(defs.deviceName).trim();
+    final turn = VoiceMatchTurn.open(
+      baseUrl: url,
+      token: s.get(defs.haToken),
+      deviceId: defs.effectiveHostname(s.get(defs.deviceHostname), name),
+      deviceName: name,
+      policy: s.get(defs.voiceMatchPolicy),
+      onEvent: onEvent,
+      log: (line) => _voice.log.info(_voice.name, line),
+    );
+    return _Turn(turn);
+  }
+}
+
+class _Turn implements VoiceMatchTurnPort {
+  _Turn(this._turn);
+  final VoiceMatchTurn _turn;
+
+  @override
+  void feed(Uint8List pcm) => _turn.feed(pcm);
+
+  @override
+  void end() => _turn.end();
 }

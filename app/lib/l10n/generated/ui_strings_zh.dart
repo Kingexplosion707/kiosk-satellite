@@ -196,6 +196,11 @@ class UiStringsZh extends UiStrings {
   }
 
   @override
+  String alarmsSkipAlarm(String time) {
+    return '跳过 $time 的闹钟';
+  }
+
+  @override
   String get alarmsNextWidget => '下一个闹钟';
 
   @override
@@ -4956,6 +4961,13 @@ class UiStringsZh extends UiStrings {
   String get settingAlarmsSunriseMinutesDescription => '模拟日出闹钟响铃前，屏幕逐渐变亮所需的时长。';
 
   @override
+  String get settingAlarmsSkipMinutesTitle => '“跳过”按钮';
+
+  @override
+  String get settingAlarmsSkipMinutesDescription =>
+      '闹钟响铃前多久，在时钟和天气氛围屏保上显示“跳过”按钮。';
+
+  @override
   String get alarmsOption5Minutes => '5 分钟';
 
   @override
@@ -4972,6 +4984,12 @@ class UiStringsZh extends UiStrings {
 
   @override
   String get alarmsOption30Minutes => '30 分钟';
+
+  @override
+  String get alarmsOption60Minutes => '60 分钟';
+
+  @override
+  String get alarmsOptionOff => '关闭';
 
   @override
   String get settingsMenuAlarms => '闹钟';
@@ -8089,6 +8107,26 @@ class UiStringsZh extends UiStrings {
   }
 
   @override
+  String get settingGroundControlEnabledTitle => '启用 Ground Control';
+
+  @override
+  String get settingGroundControlEnabledDescription =>
+      '连接到 Kiosk Satellite Ground Control，它在高性能设备上运行 Voice Match。';
+
+  @override
+  String get settingGroundControlAddressTitle => '地址';
+
+  @override
+  String get settingGroundControlAddressDescription =>
+      '留空以在网络中查找 Ground Control。如果 Ground Control 在其他网络中，请输入地址。';
+
+  @override
+  String get groundControlLooking => '正在网络中查找 Ground Control。';
+
+  @override
+  String get groundControlApp => 'Ground Control 应用';
+
+  @override
   String get haCustomPages => '自定义网页';
 
   @override
@@ -10371,6 +10409,12 @@ class UiStringsZh extends UiStrings {
 
   @override
   String get compassHoldMode => '页面保持模式';
+
+  @override
+  String get settingsMenuGroundControl => 'Ground Control';
+
+  @override
+  String get settingsMenuGroundControlSummary => '在高性能设备上运行 Voice Match';
 
   @override
   String get settingAdaptiveBrightnessTitle => '自适应亮度';
@@ -14701,6 +14745,95 @@ class UiStringsZh extends UiStrings {
       '计时器视图显示运行中的计时器时，不启动屏保。';
 
   @override
+  String get voiceMatch => 'Voice Match';
+
+  @override
+  String get voiceMatchHint => '谁在说话、其他声音、声纹录入';
+
+  @override
+  String get settingVoiceMatchEnabledTitle => '启用 Voice Match';
+
+  @override
+  String get settingVoiceMatchPolicyTitle => '回应';
+
+  @override
+  String get settingVoiceMatchPolicyDescription => '“仅限已录入的声音”会忽略电视和访客。';
+
+  @override
+  String get settingVoiceMatchRejectedTitle => '未录入的声音';
+
+  @override
+  String get settingVoiceMatchRejectedDescription => '其他人说出唤醒词时的处理方式。';
+
+  @override
+  String get settingVoiceMatchEndOnOtherVoiceTitle => '他人说话时结束';
+
+  @override
+  String get settingVoiceMatchEndOnOtherVoiceDescription =>
+      '电视或其他人继续说话时，在最后一个词处停止聆听。';
+
+  @override
+  String get settingVoiceMatchSpeakerSensorTitle => '说话人传感器';
+
+  @override
+  String get settingVoiceMatchSpeakerSensorDescription =>
+      '在 Home Assistant 中为此 Kiosk 添加 Speaker 传感器，用于自动化和代理指令。';
+
+  @override
+  String get voiceMatchOptionAnyone => '任何人';
+
+  @override
+  String get voiceMatchOptionEnrolled => '仅限已录入的声音';
+
+  @override
+  String get voiceMatchOptionQuiet => '保持安静';
+
+  @override
+  String get voiceMatchOptionChime => '播放错误提示音';
+
+  @override
+  String get voiceMatchConnecting => '正在连接';
+
+  @override
+  String get voiceMatchSearching => '正在搜索';
+
+  @override
+  String get voiceMatchNotReachable => '无法访问';
+
+  @override
+  String get voiceMatchSignInRefused => '登录被拒绝';
+
+  @override
+  String get voiceMatchNobodyEnrolled => '尚未录入任何人。';
+
+  @override
+  String get voiceMatchTokenRefused => 'Home Assistant 拒绝了此 Kiosk 的令牌。';
+
+  @override
+  String get settingVoiceMatchShowSpeakerTitle => '显示谁在说话';
+
+  @override
+  String get settingVoiceMatchShowSpeakerDescription =>
+      '在语音浮层的命令前以对应颜色显示说话人的名字。在带灯环的设备上，聆听弧会变成该颜色。';
+
+  @override
+  String get settingVoiceMatchAllowEnrollTitle => '允许在此录入';
+
+  @override
+  String get voiceMatchAppHint => '人员、声纹录入、会话和设置。';
+
+  @override
+  String get voiceMatchOpen => '打开';
+
+  @override
+  String get settingVoiceMatchEnabledDescriptionGroundControl =>
+      '识别谁在说话，并在其他人接话时停止聆听。需要 Ground Control。';
+
+  @override
+  String get settingVoiceMatchAllowEnrollDescriptionGroundControl =>
+      '允许 Ground Control 应用使用此信息亭的麦克风录制某人的声音。信息亭会显示要朗读的文字，或由灯环显示进度。';
+
+  @override
   String get voiceWakePage => '唤醒词';
 
   @override
@@ -15686,6 +15819,107 @@ class UiStringsZh extends UiStrings {
 
   @override
   String get intercomSoundFormats => '请选择 MP3、OGG、WAV、FLAC、M4A 或 AAC 文件。';
+
+  @override
+  String voiceMatchEnrollTitle(String name) {
+    return '正在录入 $name';
+  }
+
+  @override
+  String get voiceMatchEnrollStarting => '正在准备…';
+
+  @override
+  String get voiceMatchEnrollReading => '请大声朗读';
+
+  @override
+  String voiceMatchEnrollSeconds(String seconds, String target) {
+    return '$seconds / $target 秒';
+  }
+
+  @override
+  String get voiceMatchEnrollOtherVoice => '有其他声音在说话。这部分已被排除。';
+
+  @override
+  String get voiceMatchEnrollSaving => '正在保存…';
+
+  @override
+  String get voiceMatchEnrollStop => '停止';
+
+  @override
+  String get voiceMatchEnrollTipWalk => '在房间里慢慢走动';
+
+  @override
+  String get voiceMatchEnrollTipTurn => '不时背对信息亭';
+
+  @override
+  String get voiceMatchEnrollTipTalk => '用平时下指令的语气说话';
+
+  @override
+  String voiceMatchEnrollDone(String name) {
+    return '$name 已录入';
+  }
+
+  @override
+  String voiceMatchEnrollDoneDetail(String seconds) {
+    return '已添加 $seconds 秒语音。';
+  }
+
+  @override
+  String get voiceMatchEnrollFailed => '未保存任何内容';
+
+  @override
+  String get voiceMatchEnrollTooShort => '语音太少，无法保存。请至少朗读 10 秒。';
+
+  @override
+  String get voiceMatchEnrollLost => '与 Voice Match 的连接已断开。';
+
+  @override
+  String get voiceMatchEnrollNoMic => '麦克风不可用。';
+
+  @override
+  String get voiceMatchEnrollStopped => '在录制任何内容之前已停止。';
+
+  @override
+  String get voiceMatchEnrollPassage1 => '打开厨房的灯。';
+
+  @override
+  String get voiceMatchEnrollPassage2 => '设一个十分钟的计时器。';
+
+  @override
+  String get voiceMatchEnrollPassage3 => '明天天气怎么样？';
+
+  @override
+  String get voiceMatchEnrollPassage4 => '把牛奶和鸡蛋加到购物清单里。';
+
+  @override
+  String get voiceMatchEnrollPassage5 => '在客厅放点轻音乐。';
+
+  @override
+  String get voiceMatchEnrollPassage6 => '早上很冷，所以我们待在家里做了煎饼。';
+
+  @override
+  String get voiceMatchEnrollPassage7 => '后来我们走到公园，看着狗狗们在草地上互相追逐。';
+
+  @override
+  String get voiceMatchEnrollPassage8 => '傍晚起风了，我们生起了火。';
+
+  @override
+  String get voiceMatchEnrollPassage9 => '关掉楼下所有的灯。';
+
+  @override
+  String get voiceMatchEnrollPassage10 => '东京现在几点？';
+
+  @override
+  String get voiceMatchEnrollPassage11 => '提醒我星期一给牙医打电话。';
+
+  @override
+  String get voiceMatchEnrollPassage12 => '开车去机场要多长时间？';
+
+  @override
+  String get voiceMatchEnrollPassage13 => '暂停音乐。';
+
+  @override
+  String get voiceMatchEnrollPassage14 => '晚安。';
 
   @override
   String get voiceNoticeError => 'Voice Satellite 错误';
@@ -16062,6 +16296,11 @@ class UiStringsZhCn extends UiStringsZh {
   }
 
   @override
+  String alarmsSkipAlarm(String time) {
+    return '跳过 $time 的闹钟';
+  }
+
+  @override
   String get alarmsNextWidget => '下一个闹钟';
 
   @override
@@ -20822,6 +21061,13 @@ class UiStringsZhCn extends UiStringsZh {
   String get settingAlarmsSunriseMinutesDescription => '模拟日出闹钟响铃前，屏幕逐渐变亮所需的时长。';
 
   @override
+  String get settingAlarmsSkipMinutesTitle => '“跳过”按钮';
+
+  @override
+  String get settingAlarmsSkipMinutesDescription =>
+      '闹钟响铃前多久，在时钟和天气氛围屏保上显示“跳过”按钮。';
+
+  @override
   String get alarmsOption5Minutes => '5 分钟';
 
   @override
@@ -20838,6 +21084,12 @@ class UiStringsZhCn extends UiStringsZh {
 
   @override
   String get alarmsOption30Minutes => '30 分钟';
+
+  @override
+  String get alarmsOption60Minutes => '60 分钟';
+
+  @override
+  String get alarmsOptionOff => '关闭';
 
   @override
   String get settingsMenuAlarms => '闹钟';
@@ -23955,6 +24207,26 @@ class UiStringsZhCn extends UiStringsZh {
   }
 
   @override
+  String get settingGroundControlEnabledTitle => '启用 Ground Control';
+
+  @override
+  String get settingGroundControlEnabledDescription =>
+      '连接到 Kiosk Satellite Ground Control，它在高性能设备上运行 Voice Match。';
+
+  @override
+  String get settingGroundControlAddressTitle => '地址';
+
+  @override
+  String get settingGroundControlAddressDescription =>
+      '留空以在网络中查找 Ground Control。如果 Ground Control 在其他网络中，请输入地址。';
+
+  @override
+  String get groundControlLooking => '正在网络中查找 Ground Control。';
+
+  @override
+  String get groundControlApp => 'Ground Control 应用';
+
+  @override
   String get haCustomPages => '自定义网页';
 
   @override
@@ -26237,6 +26509,12 @@ class UiStringsZhCn extends UiStringsZh {
 
   @override
   String get compassHoldMode => '页面保持模式';
+
+  @override
+  String get settingsMenuGroundControl => 'Ground Control';
+
+  @override
+  String get settingsMenuGroundControlSummary => '在高性能设备上运行 Voice Match';
 
   @override
   String get settingAdaptiveBrightnessTitle => '自适应亮度';
@@ -30567,6 +30845,95 @@ class UiStringsZhCn extends UiStringsZh {
       '计时器视图显示运行中的计时器时，不启动屏保。';
 
   @override
+  String get voiceMatch => 'Voice Match';
+
+  @override
+  String get voiceMatchHint => '谁在说话、其他声音、声纹录入';
+
+  @override
+  String get settingVoiceMatchEnabledTitle => '启用 Voice Match';
+
+  @override
+  String get settingVoiceMatchPolicyTitle => '回应';
+
+  @override
+  String get settingVoiceMatchPolicyDescription => '“仅限已录入的声音”会忽略电视和访客。';
+
+  @override
+  String get settingVoiceMatchRejectedTitle => '未录入的声音';
+
+  @override
+  String get settingVoiceMatchRejectedDescription => '其他人说出唤醒词时的处理方式。';
+
+  @override
+  String get settingVoiceMatchEndOnOtherVoiceTitle => '他人说话时结束';
+
+  @override
+  String get settingVoiceMatchEndOnOtherVoiceDescription =>
+      '电视或其他人继续说话时，在最后一个词处停止聆听。';
+
+  @override
+  String get settingVoiceMatchSpeakerSensorTitle => '说话人传感器';
+
+  @override
+  String get settingVoiceMatchSpeakerSensorDescription =>
+      '在 Home Assistant 中为此 Kiosk 添加 Speaker 传感器，用于自动化和代理指令。';
+
+  @override
+  String get voiceMatchOptionAnyone => '任何人';
+
+  @override
+  String get voiceMatchOptionEnrolled => '仅限已录入的声音';
+
+  @override
+  String get voiceMatchOptionQuiet => '保持安静';
+
+  @override
+  String get voiceMatchOptionChime => '播放错误提示音';
+
+  @override
+  String get voiceMatchConnecting => '正在连接';
+
+  @override
+  String get voiceMatchSearching => '正在搜索';
+
+  @override
+  String get voiceMatchNotReachable => '无法访问';
+
+  @override
+  String get voiceMatchSignInRefused => '登录被拒绝';
+
+  @override
+  String get voiceMatchNobodyEnrolled => '尚未录入任何人。';
+
+  @override
+  String get voiceMatchTokenRefused => 'Home Assistant 拒绝了此 Kiosk 的令牌。';
+
+  @override
+  String get settingVoiceMatchShowSpeakerTitle => '显示谁在说话';
+
+  @override
+  String get settingVoiceMatchShowSpeakerDescription =>
+      '在语音浮层的命令前以对应颜色显示说话人的名字。在带灯环的设备上，聆听弧会变成该颜色。';
+
+  @override
+  String get settingVoiceMatchAllowEnrollTitle => '允许在此录入';
+
+  @override
+  String get voiceMatchAppHint => '人员、声纹录入、会话和设置。';
+
+  @override
+  String get voiceMatchOpen => '打开';
+
+  @override
+  String get settingVoiceMatchEnabledDescriptionGroundControl =>
+      '识别谁在说话，并在其他人接话时停止聆听。需要 Ground Control。';
+
+  @override
+  String get settingVoiceMatchAllowEnrollDescriptionGroundControl =>
+      '允许 Ground Control 应用使用此信息亭的麦克风录制某人的声音。信息亭会显示要朗读的文字，或由灯环显示进度。';
+
+  @override
   String get voiceWakePage => '唤醒词';
 
   @override
@@ -31552,6 +31919,107 @@ class UiStringsZhCn extends UiStringsZh {
 
   @override
   String get intercomSoundFormats => '请选择 MP3、OGG、WAV、FLAC、M4A 或 AAC 文件。';
+
+  @override
+  String voiceMatchEnrollTitle(String name) {
+    return '正在录入 $name';
+  }
+
+  @override
+  String get voiceMatchEnrollStarting => '正在准备…';
+
+  @override
+  String get voiceMatchEnrollReading => '请大声朗读';
+
+  @override
+  String voiceMatchEnrollSeconds(String seconds, String target) {
+    return '$seconds / $target 秒';
+  }
+
+  @override
+  String get voiceMatchEnrollOtherVoice => '有其他声音在说话。这部分已被排除。';
+
+  @override
+  String get voiceMatchEnrollSaving => '正在保存…';
+
+  @override
+  String get voiceMatchEnrollStop => '停止';
+
+  @override
+  String get voiceMatchEnrollTipWalk => '在房间里慢慢走动';
+
+  @override
+  String get voiceMatchEnrollTipTurn => '不时背对信息亭';
+
+  @override
+  String get voiceMatchEnrollTipTalk => '用平时下指令的语气说话';
+
+  @override
+  String voiceMatchEnrollDone(String name) {
+    return '$name 已录入';
+  }
+
+  @override
+  String voiceMatchEnrollDoneDetail(String seconds) {
+    return '已添加 $seconds 秒语音。';
+  }
+
+  @override
+  String get voiceMatchEnrollFailed => '未保存任何内容';
+
+  @override
+  String get voiceMatchEnrollTooShort => '语音太少，无法保存。请至少朗读 10 秒。';
+
+  @override
+  String get voiceMatchEnrollLost => '与 Voice Match 的连接已断开。';
+
+  @override
+  String get voiceMatchEnrollNoMic => '麦克风不可用。';
+
+  @override
+  String get voiceMatchEnrollStopped => '在录制任何内容之前已停止。';
+
+  @override
+  String get voiceMatchEnrollPassage1 => '打开厨房的灯。';
+
+  @override
+  String get voiceMatchEnrollPassage2 => '设一个十分钟的计时器。';
+
+  @override
+  String get voiceMatchEnrollPassage3 => '明天天气怎么样？';
+
+  @override
+  String get voiceMatchEnrollPassage4 => '把牛奶和鸡蛋加到购物清单里。';
+
+  @override
+  String get voiceMatchEnrollPassage5 => '在客厅放点轻音乐。';
+
+  @override
+  String get voiceMatchEnrollPassage6 => '早上很冷，所以我们待在家里做了煎饼。';
+
+  @override
+  String get voiceMatchEnrollPassage7 => '后来我们走到公园，看着狗狗们在草地上互相追逐。';
+
+  @override
+  String get voiceMatchEnrollPassage8 => '傍晚起风了，我们生起了火。';
+
+  @override
+  String get voiceMatchEnrollPassage9 => '关掉楼下所有的灯。';
+
+  @override
+  String get voiceMatchEnrollPassage10 => '东京现在几点？';
+
+  @override
+  String get voiceMatchEnrollPassage11 => '提醒我星期一给牙医打电话。';
+
+  @override
+  String get voiceMatchEnrollPassage12 => '开车去机场要多长时间？';
+
+  @override
+  String get voiceMatchEnrollPassage13 => '暂停音乐。';
+
+  @override
+  String get voiceMatchEnrollPassage14 => '晚安。';
 
   @override
   String get voiceNoticeError => 'Voice Satellite 错误';

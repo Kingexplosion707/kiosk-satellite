@@ -2140,6 +2140,10 @@ const settingMessageIds = <String, Map<String, String>>{
     "title": "settingAlarmsSunriseMinutesTitle",
     "description": "settingAlarmsSunriseMinutesDescription",
   },
+  "alarms.skip_minutes": {
+    "title": "settingAlarmsSkipMinutesTitle",
+    "description": "settingAlarmsSkipMinutesDescription",
+  },
   "alarms.tts_engine": {
     "title": "settingAlarmsTtsEngineTitle",
     "description": "settingAlarmsTtsEngineDescription",
@@ -2759,5 +2763,41 @@ const settingMessageIds = <String, Map<String, String>>{
   "timers.pause_screensaver": {
     "title": "settingTimersPauseScreensaverTitle",
     "description": "settingTimersPauseScreensaverDescription",
+  },
+  "voice_match.enabled": {
+    "title": "settingVoiceMatchEnabledTitle",
+    "description": "settingVoiceMatchEnabledDescriptionGroundControl",
+  },
+  "voice_match.policy": {
+    "title": "settingVoiceMatchPolicyTitle",
+    "description": "settingVoiceMatchPolicyDescription",
+  },
+  "voice_match.rejected": {
+    "title": "settingVoiceMatchRejectedTitle",
+    "description": "settingVoiceMatchRejectedDescription",
+  },
+  "voice_match.end_on_other_voice": {
+    "title": "settingVoiceMatchEndOnOtherVoiceTitle",
+    "description": "settingVoiceMatchEndOnOtherVoiceDescription",
+  },
+  "voice_match.speaker_sensor": {
+    "title": "settingVoiceMatchSpeakerSensorTitle",
+    "description": "settingVoiceMatchSpeakerSensorDescription",
+  },
+  "voice_match.show_speaker": {
+    "title": "settingVoiceMatchShowSpeakerTitle",
+    "description": "settingVoiceMatchShowSpeakerDescription",
+  },
+  "voice_match.allow_enroll": {
+    "title": "settingVoiceMatchAllowEnrollTitle",
+    "description": "settingVoiceMatchAllowEnrollDescriptionGroundControl",
+  },
+  "ground_control.enabled": {
+    "title": "settingGroundControlEnabledTitle",
+    "description": "settingGroundControlEnabledDescription",
+  },
+  "ground_control.address": {
+    "title": "settingGroundControlAddressTitle",
+    "description": "settingGroundControlAddressDescription",
   },
 };

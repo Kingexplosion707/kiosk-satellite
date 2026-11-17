@@ -201,6 +201,11 @@ class UiStringsEn extends UiStrings {
   }
 
   @override
+  String alarmsSkipAlarm(String time) {
+    return 'Skip $time alarm';
+  }
+
+  @override
   String get alarmsNextWidget => 'Next alarm';
 
   @override
@@ -5122,6 +5127,13 @@ class UiStringsEn extends UiStrings {
       'How long the screen takes to brighten before a sunrise alarm.';
 
   @override
+  String get settingAlarmsSkipMinutesTitle => 'Skip button';
+
+  @override
+  String get settingAlarmsSkipMinutesDescription =>
+      'How long before an alarm the Clock and Weather Mood screensavers show a button to skip it.';
+
+  @override
   String get alarmsOption5Minutes => '5 minutes';
 
   @override
@@ -5138,6 +5150,12 @@ class UiStringsEn extends UiStrings {
 
   @override
   String get alarmsOption30Minutes => '30 minutes';
+
+  @override
+  String get alarmsOption60Minutes => '60 minutes';
+
+  @override
+  String get alarmsOptionOff => 'Off';
 
   @override
   String get settingsMenuAlarms => 'Alarms';
@@ -8439,6 +8457,27 @@ class UiStringsEn extends UiStrings {
   }
 
   @override
+  String get settingGroundControlEnabledTitle => 'Enable Ground Control';
+
+  @override
+  String get settingGroundControlEnabledDescription =>
+      'Connect to Kiosk Satellite Ground Control, which runs Voice Match on a capable machine.';
+
+  @override
+  String get settingGroundControlAddressTitle => 'Address';
+
+  @override
+  String get settingGroundControlAddressDescription =>
+      'Leave empty to find Ground Control on the network. Enter one for Ground Control on another network.';
+
+  @override
+  String get groundControlLooking =>
+      'Looking for Ground Control on the network.';
+
+  @override
+  String get groundControlApp => 'Ground Control app';
+
+  @override
   String get haCustomPages => 'Custom Pages';
 
   @override
@@ -10855,6 +10894,13 @@ class UiStringsEn extends UiStrings {
 
   @override
   String get compassHoldMode => 'Hold Mode';
+
+  @override
+  String get settingsMenuGroundControl => 'Ground Control';
+
+  @override
+  String get settingsMenuGroundControlSummary =>
+      'Voice Match on a capable machine';
 
   @override
   String get settingAdaptiveBrightnessTitle => 'Adaptive brightness';
@@ -15510,6 +15556,99 @@ class UiStringsEn extends UiStrings {
       'Keep the screensaver from starting while the Timers view shows a running timer.';
 
   @override
+  String get voiceMatch => 'Voice Match';
+
+  @override
+  String get voiceMatchHint => 'Who is talking, other voices, enrollment';
+
+  @override
+  String get settingVoiceMatchEnabledTitle => 'Enable Voice Match';
+
+  @override
+  String get settingVoiceMatchPolicyTitle => 'Answer';
+
+  @override
+  String get settingVoiceMatchPolicyDescription =>
+      'Enrolled voices only ignores the TV and guests.';
+
+  @override
+  String get settingVoiceMatchRejectedTitle => 'Voice not enrolled';
+
+  @override
+  String get settingVoiceMatchRejectedDescription =>
+      'What happens when someone else says the wake word.';
+
+  @override
+  String get settingVoiceMatchEndOnOtherVoiceTitle =>
+      'End when someone else talks';
+
+  @override
+  String get settingVoiceMatchEndOnOtherVoiceDescription =>
+      'Stops listening at the last word when the TV or another person keeps talking.';
+
+  @override
+  String get settingVoiceMatchSpeakerSensorTitle => 'Speaker sensor';
+
+  @override
+  String get settingVoiceMatchSpeakerSensorDescription =>
+      'Adds a Speaker sensor to this kiosk in Home Assistant, for automations and agent instructions.';
+
+  @override
+  String get voiceMatchOptionAnyone => 'Anyone';
+
+  @override
+  String get voiceMatchOptionEnrolled => 'Enrolled voices only';
+
+  @override
+  String get voiceMatchOptionQuiet => 'Stay quiet';
+
+  @override
+  String get voiceMatchOptionChime => 'Play the error chime';
+
+  @override
+  String get voiceMatchConnecting => 'Connecting';
+
+  @override
+  String get voiceMatchSearching => 'Searching';
+
+  @override
+  String get voiceMatchNotReachable => 'Not reachable';
+
+  @override
+  String get voiceMatchSignInRefused => 'Sign-in refused';
+
+  @override
+  String get voiceMatchNobodyEnrolled => 'Nobody is enrolled yet.';
+
+  @override
+  String get voiceMatchTokenRefused =>
+      'Home Assistant refused this kiosk\'s token.';
+
+  @override
+  String get settingVoiceMatchShowSpeakerTitle => 'Show who is talking';
+
+  @override
+  String get settingVoiceMatchShowSpeakerDescription =>
+      'The speaker\'s name before the command on the voice overlay, in their color. On a device with a light ring, the listening arc takes the color.';
+
+  @override
+  String get settingVoiceMatchAllowEnrollTitle => 'Allow enrollment here';
+
+  @override
+  String get voiceMatchAppHint => 'People, enrollment, sessions and settings.';
+
+  @override
+  String get voiceMatchOpen => 'Open';
+
+  @override
+  String get settingVoiceMatchEnabledDescriptionGroundControl =>
+      'Recognize who is talking and stop listening when someone else takes over. Needs Ground Control.';
+
+  @override
+  String get settingVoiceMatchAllowEnrollDescriptionGroundControl =>
+      'Lets the Ground Control app record a person\'s voice with this kiosk\'s microphone. The kiosk shows the text to read, or the light ring shows the progress.';
+
+  @override
   String get voiceWakePage => 'Wake Word';
 
   @override
@@ -16559,6 +16698,116 @@ class UiStringsEn extends UiStrings {
   @override
   String get intercomSoundFormats =>
       'Pick an MP3, OGG, WAV, FLAC, M4A or AAC file.';
+
+  @override
+  String voiceMatchEnrollTitle(String name) {
+    return 'Enrolling $name';
+  }
+
+  @override
+  String get voiceMatchEnrollStarting => 'Getting ready…';
+
+  @override
+  String get voiceMatchEnrollReading => 'Read this aloud';
+
+  @override
+  String voiceMatchEnrollSeconds(String seconds, String target) {
+    return '$seconds of $target s';
+  }
+
+  @override
+  String get voiceMatchEnrollOtherVoice =>
+      'Another voice is talking. That part is left out.';
+
+  @override
+  String get voiceMatchEnrollSaving => 'Saving…';
+
+  @override
+  String get voiceMatchEnrollStop => 'Stop';
+
+  @override
+  String get voiceMatchEnrollTipWalk => 'Walk slowly around the room';
+
+  @override
+  String get voiceMatchEnrollTipTurn => 'Turn away from the kiosk now and then';
+
+  @override
+  String get voiceMatchEnrollTipTalk => 'Talk the way you give commands';
+
+  @override
+  String voiceMatchEnrollDone(String name) {
+    return '$name is enrolled';
+  }
+
+  @override
+  String voiceMatchEnrollDoneDetail(String seconds) {
+    return '$seconds s of speech added.';
+  }
+
+  @override
+  String get voiceMatchEnrollFailed => 'Nothing was saved';
+
+  @override
+  String get voiceMatchEnrollTooShort =>
+      'Too little speech to save. Read for at least 10 seconds.';
+
+  @override
+  String get voiceMatchEnrollLost => 'The connection to Voice Match was lost.';
+
+  @override
+  String get voiceMatchEnrollNoMic => 'The microphone is not available.';
+
+  @override
+  String get voiceMatchEnrollStopped => 'Stopped before anything was recorded.';
+
+  @override
+  String get voiceMatchEnrollPassage1 => 'Turn on the kitchen lights.';
+
+  @override
+  String get voiceMatchEnrollPassage2 => 'Set a timer for ten minutes.';
+
+  @override
+  String get voiceMatchEnrollPassage3 => 'What is the weather like tomorrow?';
+
+  @override
+  String get voiceMatchEnrollPassage4 =>
+      'Add milk and eggs to the shopping list.';
+
+  @override
+  String get voiceMatchEnrollPassage5 =>
+      'Play some quiet music in the living room.';
+
+  @override
+  String get voiceMatchEnrollPassage6 =>
+      'The morning was cold, so we stayed inside and made pancakes.';
+
+  @override
+  String get voiceMatchEnrollPassage7 =>
+      'Later we walked to the park and watched the dogs chase each other across the grass.';
+
+  @override
+  String get voiceMatchEnrollPassage8 =>
+      'In the evening the wind picked up and we lit a fire.';
+
+  @override
+  String get voiceMatchEnrollPassage9 => 'Turn off all the lights downstairs.';
+
+  @override
+  String get voiceMatchEnrollPassage10 => 'What time is it in Tokyo?';
+
+  @override
+  String get voiceMatchEnrollPassage11 =>
+      'Remind me to call the dentist on Monday.';
+
+  @override
+  String get voiceMatchEnrollPassage12 =>
+      'How long will it take to drive to the airport?';
+
+  @override
+  String get voiceMatchEnrollPassage13 => 'Pause the music.';
+
+  @override
+  String get voiceMatchEnrollPassage14 => 'Good night.';
 
   @override
   String get voiceNoticeError => 'Voice Satellite error';

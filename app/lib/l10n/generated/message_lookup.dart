@@ -1386,12 +1386,17 @@ String messageById(UiStrings strings, String? id, String fallback) =>
         strings.settingAlarmsSunriseMinutesTitle,
       'settingAlarmsSunriseMinutesDescription' =>
         strings.settingAlarmsSunriseMinutesDescription,
+      'settingAlarmsSkipMinutesTitle' => strings.settingAlarmsSkipMinutesTitle,
+      'settingAlarmsSkipMinutesDescription' =>
+        strings.settingAlarmsSkipMinutesDescription,
       'alarmsOption5Minutes' => strings.alarmsOption5Minutes,
       'alarmsOption10Minutes' => strings.alarmsOption10Minutes,
       'alarmsOption15Minutes' => strings.alarmsOption15Minutes,
       'alarmsOption20Minutes' => strings.alarmsOption20Minutes,
       'alarmsOption25Minutes' => strings.alarmsOption25Minutes,
       'alarmsOption30Minutes' => strings.alarmsOption30Minutes,
+      'alarmsOption60Minutes' => strings.alarmsOption60Minutes,
+      'alarmsOptionOff' => strings.alarmsOptionOff,
       'settingsMenuAlarms' => strings.settingsMenuAlarms,
       'settingsMenuAlarmsSummary' => strings.settingsMenuAlarmsSummary,
       'settingAlarmsEaseInTitle' => strings.settingAlarmsEaseInTitle,
@@ -2442,6 +2447,16 @@ String messageById(UiStrings strings, String? id, String fallback) =>
       'settingHandGestureHoldSecondsDescription' =>
         strings.settingHandGestureHoldSecondsDescription,
       'gestureHoldInstant' => strings.gestureHoldInstant,
+      'settingGroundControlEnabledTitle' =>
+        strings.settingGroundControlEnabledTitle,
+      'settingGroundControlEnabledDescription' =>
+        strings.settingGroundControlEnabledDescription,
+      'settingGroundControlAddressTitle' =>
+        strings.settingGroundControlAddressTitle,
+      'settingGroundControlAddressDescription' =>
+        strings.settingGroundControlAddressDescription,
+      'groundControlLooking' => strings.groundControlLooking,
+      'groundControlApp' => strings.groundControlApp,
       'haCustomPages' => strings.haCustomPages,
       'haCustomPagesHintDashboard' => strings.haCustomPagesHintDashboard,
       'settingHaCustomPagesSocketTitle' =>
@@ -3385,6 +3400,9 @@ String messageById(UiStrings strings, String? id, String fallback) =>
       'compassStateOn' => strings.compassStateOn,
       'compassStateOff' => strings.compassStateOff,
       'compassHoldMode' => strings.compassHoldMode,
+      'settingsMenuGroundControl' => strings.settingsMenuGroundControl,
+      'settingsMenuGroundControlSummary' =>
+        strings.settingsMenuGroundControlSummary,
       'settingAdaptiveBrightnessTitle' =>
         strings.settingAdaptiveBrightnessTitle,
       'settingAdaptiveBrightnessDescription' =>
@@ -5352,6 +5370,46 @@ String messageById(UiStrings strings, String? id, String fallback) =>
         strings.settingTimersPauseScreensaverTitle,
       'settingTimersPauseScreensaverDescription' =>
         strings.settingTimersPauseScreensaverDescription,
+      'voiceMatch' => strings.voiceMatch,
+      'voiceMatchHint' => strings.voiceMatchHint,
+      'settingVoiceMatchEnabledTitle' => strings.settingVoiceMatchEnabledTitle,
+      'settingVoiceMatchPolicyTitle' => strings.settingVoiceMatchPolicyTitle,
+      'settingVoiceMatchPolicyDescription' =>
+        strings.settingVoiceMatchPolicyDescription,
+      'settingVoiceMatchRejectedTitle' =>
+        strings.settingVoiceMatchRejectedTitle,
+      'settingVoiceMatchRejectedDescription' =>
+        strings.settingVoiceMatchRejectedDescription,
+      'settingVoiceMatchEndOnOtherVoiceTitle' =>
+        strings.settingVoiceMatchEndOnOtherVoiceTitle,
+      'settingVoiceMatchEndOnOtherVoiceDescription' =>
+        strings.settingVoiceMatchEndOnOtherVoiceDescription,
+      'settingVoiceMatchSpeakerSensorTitle' =>
+        strings.settingVoiceMatchSpeakerSensorTitle,
+      'settingVoiceMatchSpeakerSensorDescription' =>
+        strings.settingVoiceMatchSpeakerSensorDescription,
+      'voiceMatchOptionAnyone' => strings.voiceMatchOptionAnyone,
+      'voiceMatchOptionEnrolled' => strings.voiceMatchOptionEnrolled,
+      'voiceMatchOptionQuiet' => strings.voiceMatchOptionQuiet,
+      'voiceMatchOptionChime' => strings.voiceMatchOptionChime,
+      'voiceMatchConnecting' => strings.voiceMatchConnecting,
+      'voiceMatchSearching' => strings.voiceMatchSearching,
+      'voiceMatchNotReachable' => strings.voiceMatchNotReachable,
+      'voiceMatchSignInRefused' => strings.voiceMatchSignInRefused,
+      'voiceMatchNobodyEnrolled' => strings.voiceMatchNobodyEnrolled,
+      'voiceMatchTokenRefused' => strings.voiceMatchTokenRefused,
+      'settingVoiceMatchShowSpeakerTitle' =>
+        strings.settingVoiceMatchShowSpeakerTitle,
+      'settingVoiceMatchShowSpeakerDescription' =>
+        strings.settingVoiceMatchShowSpeakerDescription,
+      'settingVoiceMatchAllowEnrollTitle' =>
+        strings.settingVoiceMatchAllowEnrollTitle,
+      'voiceMatchAppHint' => strings.voiceMatchAppHint,
+      'voiceMatchOpen' => strings.voiceMatchOpen,
+      'settingVoiceMatchEnabledDescriptionGroundControl' =>
+        strings.settingVoiceMatchEnabledDescriptionGroundControl,
+      'settingVoiceMatchAllowEnrollDescriptionGroundControl' =>
+        strings.settingVoiceMatchAllowEnrollDescriptionGroundControl,
       'voiceWakePage' => strings.voiceWakePage,
       'voiceWakeHint' => strings.voiceWakeHint,
       'voiceWakeLabel' => strings.voiceWakeLabel,
@@ -5666,6 +5724,33 @@ String messageById(UiStrings strings, String? id, String fallback) =>
       'intercomCopyFailed' => strings.intercomCopyFailed,
       'intercomSoundFilename' => strings.intercomSoundFilename,
       'intercomSoundFormats' => strings.intercomSoundFormats,
+      'voiceMatchEnrollStarting' => strings.voiceMatchEnrollStarting,
+      'voiceMatchEnrollReading' => strings.voiceMatchEnrollReading,
+      'voiceMatchEnrollOtherVoice' => strings.voiceMatchEnrollOtherVoice,
+      'voiceMatchEnrollSaving' => strings.voiceMatchEnrollSaving,
+      'voiceMatchEnrollStop' => strings.voiceMatchEnrollStop,
+      'voiceMatchEnrollTipWalk' => strings.voiceMatchEnrollTipWalk,
+      'voiceMatchEnrollTipTurn' => strings.voiceMatchEnrollTipTurn,
+      'voiceMatchEnrollTipTalk' => strings.voiceMatchEnrollTipTalk,
+      'voiceMatchEnrollFailed' => strings.voiceMatchEnrollFailed,
+      'voiceMatchEnrollTooShort' => strings.voiceMatchEnrollTooShort,
+      'voiceMatchEnrollLost' => strings.voiceMatchEnrollLost,
+      'voiceMatchEnrollNoMic' => strings.voiceMatchEnrollNoMic,
+      'voiceMatchEnrollStopped' => strings.voiceMatchEnrollStopped,
+      'voiceMatchEnrollPassage1' => strings.voiceMatchEnrollPassage1,
+      'voiceMatchEnrollPassage2' => strings.voiceMatchEnrollPassage2,
+      'voiceMatchEnrollPassage3' => strings.voiceMatchEnrollPassage3,
+      'voiceMatchEnrollPassage4' => strings.voiceMatchEnrollPassage4,
+      'voiceMatchEnrollPassage5' => strings.voiceMatchEnrollPassage5,
+      'voiceMatchEnrollPassage6' => strings.voiceMatchEnrollPassage6,
+      'voiceMatchEnrollPassage7' => strings.voiceMatchEnrollPassage7,
+      'voiceMatchEnrollPassage8' => strings.voiceMatchEnrollPassage8,
+      'voiceMatchEnrollPassage9' => strings.voiceMatchEnrollPassage9,
+      'voiceMatchEnrollPassage10' => strings.voiceMatchEnrollPassage10,
+      'voiceMatchEnrollPassage11' => strings.voiceMatchEnrollPassage11,
+      'voiceMatchEnrollPassage12' => strings.voiceMatchEnrollPassage12,
+      'voiceMatchEnrollPassage13' => strings.voiceMatchEnrollPassage13,
+      'voiceMatchEnrollPassage14' => strings.voiceMatchEnrollPassage14,
       'voiceNoticeError' => strings.voiceNoticeError,
       'voiceNoticeWarning' => strings.voiceNoticeWarning,
       'voiceNoticeNotice' => strings.voiceNoticeNotice,
