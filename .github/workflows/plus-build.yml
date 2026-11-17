@@ -1,9 +1,9 @@
 name: Kiosk Satellite Plus build
 
-# Builds the APK on every push to main and publishes it as a release. Signed
-# with the KIOSK_PLUS_KEYSTORE_BASE64 secret (the key the first build was
-# signed with), else a key made once and kept in the Actions cache, so each
-# build installs over the last.
+# Builds the APK on every push to main and publishes it as a release, signed
+# with the KIOSK_PLUS_KEYSTORE_BASE64 secret: the key the app on the tablet was
+# first signed with, so each build installs over the last and the app's own
+# updater can install it. Without the secret it builds nothing.
 
 on:
   push:
@@ -45,40 +45,26 @@ jobs:
             echo "found=true" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Restore the signing key
-        id: key
+      # Without the key the build couldn't install over the app on the tablet, so nothing is published.
+      - name: No signing key
         if: steps.secret.outputs.found != 'true'
-        uses: actions/cache/restore@v4
-        with:
-          path: app/android/app/plus-keystore.jks
-          key: kiosk-plus-keystore-v1
-
-      - name: Make the signing key (first build only)
-        if: steps.secret.outputs.found != 'true' && steps.key.outputs.cache-hit != 'true'
-        working-directory: app/android/app
-        run: |
-          keytool -genkeypair -v -keystore plus-keystore.jks -alias plus -keyalg RSA -keysize 4096 \
-            -validity 20000 -storepass kioskplus -keypass kioskplus -dname "CN=Kiosk Satellite Plus"
-
-      - name: Keep the signing key
-        if: steps.secret.outputs.found != 'true' && steps.key.outputs.cache-hit != 'true'
-        uses: actions/cache/save@v4
-        with:
-          path: app/android/app/plus-keystore.jks
-          key: kiosk-plus-keystore-v1
+        run: echo "::warning::KIOSK_PLUS_KEYSTORE_BASE64 isn't set; nothing is built or published."
 
       - name: Point the build at the key
+        if: steps.secret.outputs.found == 'true'
         working-directory: app/android
         run: |
           printf 'storePassword=kioskplus\nkeyPassword=kioskplus\nkeyAlias=plus\nstoreFile=plus-keystore.jks\n' > key.properties
 
       - name: Check the Plus code
+        if: steps.secret.outputs.found == 'true'
         working-directory: app
         run: |
           flutter pub get
           flutter analyze --no-fatal-infos --no-fatal-warnings lib/ui/plus_home.dart lib/ui/plus_spicy.dart lib/ui/kiosk_screen.dart
 
       - name: Build the APK
+        if: steps.secret.outputs.found == 'true'
         working-directory: app
         run: |
           VERSION="$(sed -n 's/^version: *\([^+]*\).*/\1/p' pubspec.yaml)"
@@ -92,6 +78,7 @@ jobs:
           echo "PLUS_VERSION=${VERSION}-plus.${GITHUB_RUN_NUMBER}" >> "$GITHUB_ENV"
 
       - name: Publish
+        if: steps.secret.outputs.found == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |

@@ -8,7 +8,7 @@ Behnoud's personal build of Kiosk Satellite (jxlarrea/kiosk-satellite, CC BY-NC-
   - Lyrics on the home, word by word in Spicy's manner; the kiosk's own synced lines when Spicy has none for the song.
   - The record's animated cover on the now-playing card, and the song's Spotify Canvas behind the home.
   - The screensaver is Spicy's always-on display (landscape layout, screen brightness kept). A tap closes it back to the home. Without Spicy installed the kiosk's own screensaver runs.
-- **Builds**: `.github/workflows/plus-build.yml` builds on every push to main and publishes a release with the APK, signed with the `KIOSK_PLUS_KEYSTORE_BASE64` secret. Upstream's release and issue workflows were removed.
+- **Builds**: `.github/workflows/plus-build.yml` builds on every push to main and publishes a release with the APK, signed with the `KIOSK_PLUS_KEYSTORE_BASE64` secret (the key of the first build, which is on the tablet); without it nothing is published, so the in-app updater never offers a build that would not install. Upstream's release and issue workflows were removed.
 - **Updates**: `.github/workflows/upstream-sync.yml` merges jxlarrea/kiosk-satellite into main every six hours, then builds. A conflict opens an issue labelled upstream-sync.
 
 ## Installing
