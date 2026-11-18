@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:math' as math;
 import 'dart:typed_data';
 
 import 'package:web_socket_channel/web_socket_channel.dart';
 
+import '../../l10n/generated/ui_strings.dart';
 import 'voice_session.dart' show VoiceMicPort;
 
 /// Where an enrollment is: getting ready, recording, saving what was
@@ -21,6 +23,8 @@ class VoiceMatchEnrollment {
     required this.targetS,
     this.phase = EnrollPhase.starting,
     this.speechS = 0,
+    this.sentence,
+    this.sentenceFill = 0,
     this.level = -90,
     this.otherVoices = 0,
     this.otherVoiceAt,
@@ -41,6 +45,12 @@ class VoiceMatchEnrollment {
 
   /// Speech counted toward [targetS] so far.
   final double speechS;
+
+  /// The sentence of the passage to read and how much of it was spoken,
+  /// as Ground Control paces it. Null from a Ground Control that doesn't
+  /// pace the passage.
+  final int? sentence;
+  final double sentenceFill;
 
   /// The last half second's level, dBFS, for the meter.
   final double level;
@@ -72,6 +82,8 @@ class VoiceMatchEnrollment {
   VoiceMatchEnrollment copyWith({
     EnrollPhase? phase,
     double? speechS,
+    int? sentence,
+    double? sentenceFill,
     double? level,
     int? otherVoices,
     DateTime? otherVoiceAt,
@@ -87,6 +99,8 @@ class VoiceMatchEnrollment {
     targetS: targetS,
     phase: phase ?? this.phase,
     speechS: speechS ?? this.speechS,
+    sentence: sentence ?? this.sentence,
+    sentenceFill: sentenceFill ?? this.sentenceFill,
     level: level ?? this.level,
     otherVoices: otherVoices ?? this.otherVoices,
     otherVoiceAt: otherVoiceAt ?? this.otherVoiceAt,
@@ -103,6 +117,8 @@ class VoiceMatchEnrollment {
     'color': color,
     'phase': phase.name,
     'speechS': speechS,
+    'sentence': sentence,
+    'sentenceFill': sentenceFill,
     'targetS': targetS,
     'otherVoices': otherVoices,
     'addedS': addedS,
@@ -111,6 +127,54 @@ class VoiceMatchEnrollment {
     'code': code,
     'message': message,
   };
+}
+
+/// The passage, one sentence at a time, in this kiosk's language.
+List<String> enrollPassage(UiStrings t) => [
+  t.voiceMatchEnrollPassage1,
+  t.voiceMatchEnrollPassage2,
+  t.voiceMatchEnrollPassage3,
+  t.voiceMatchEnrollPassage4,
+  t.voiceMatchEnrollPassage5,
+  t.voiceMatchEnrollPassage6,
+  t.voiceMatchEnrollPassage7,
+  t.voiceMatchEnrollPassage8,
+  t.voiceMatchEnrollPassage9,
+  t.voiceMatchEnrollPassage10,
+  t.voiceMatchEnrollPassage11,
+  t.voiceMatchEnrollPassage12,
+  t.voiceMatchEnrollPassage13,
+  t.voiceMatchEnrollPassage14,
+];
+
+/// About how long [sentence] takes to read aloud, in seconds of speech:
+/// 14 letters a second, or 4.5 for Chinese characters, 1.5 s at least.
+double readingSeconds(String sentence) {
+  var latin = 0;
+  var wide = 0;
+  for (final rune in sentence.runes) {
+    if (rune >= 0x2E80) {
+      wide++;
+    } else if (rune > 0x20) {
+      latin++;
+    }
+  }
+  return math.max(1.5, latin / 14 + wide / 4.5);
+}
+
+/// Which sentence to show after [speechS] of [targetS] seconds of speech.
+/// The passage is spread over the target, so it ends as the enrollment
+/// does. It starts over when someone reads past it.
+int sentenceAt(List<String> passage, double speechS, double targetS) {
+  final lengths = [for (final s in passage) readingSeconds(s)];
+  final total = lengths.fold<double>(0, (a, b) => a + b);
+  if (total <= 0 || targetS <= 0) return 0;
+  var at = (speechS / targetS * total) % total;
+  for (var i = 0; i < lengths.length; i++) {
+    if (at < lengths[i]) return i;
+    at -= lengths[i];
+  }
+  return lengths.length - 1;
 }
 
 /// What starts an enrollment: the person and how much speech to collect.
@@ -276,6 +340,8 @@ class VoiceMatchEnroller {
                 ? EnrollPhase.recording
                 : null,
             speechS: read('speech_s', s.speechS),
+            sentence: e['sentence'] is int ? e['sentence'] as int : null,
+            sentenceFill: read('sentence_fill', s.sentenceFill),
             level: read('level', s.level),
           ),
         );
@@ -411,6 +477,7 @@ class EnrollSocket implements EnrollSocketPort {
     required String deviceId,
     required String deviceName,
     required String model,
+    List<String> passage = const [],
     required void Function(Map<String, Object?> event) onEvent,
     void Function(String line)? log,
   }) {
@@ -429,6 +496,8 @@ class EnrollSocket implements EnrollSocketPort {
         'device_name': deviceName,
         'model': model,
         'target_s': request.targetS,
+        // The text this kiosk shows, so the Ground Control app shows the same.
+        if (passage.isNotEmpty) 'passage': passage,
       }),
     );
     return socket;

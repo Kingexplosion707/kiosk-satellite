@@ -7,10 +7,12 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 
+import '../../core/app_locales.dart';
 import '../../core/command_registry.dart';
 import '../../core/events.dart';
 import '../../core/headless.dart';
 import '../../core/manager.dart';
+import '../../l10n/generated/ui_strings.dart';
 import '../btproxy/bt_proxy_manager.dart';
 import '../analytics/usage_counters.dart';
 import '../home_assistant/ha_tts.dart';
@@ -2906,10 +2908,8 @@ class VoiceManager extends Manager {
           )
         : next;
     if (next.visible) shown = shown.copyWith(assistant: _assistant);
-    if (_settings.get(defs.voiceHideSentimentTags) && next.answer.isNotEmpty) {
-      shown = shown.copyWith(
-        answer: stripSentimentTags(next.answer, streaming: next.streaming),
-      );
+    if (_settings.get(defs.voiceHideSentimentTags)) {
+      shown = withoutSentimentTags(shown);
     }
     // Visible either way: the screensaver holds its screen off timer
     // under both, and what is under it pauses (see [underlayPaused]).
@@ -3022,6 +3022,9 @@ class VoiceManager extends Manager {
       deviceId: defs.effectiveHostname(s.get(defs.deviceHostname), deviceName),
       deviceName: deviceName,
       model: '',
+      passage: enrollPassage(
+        lookupUiStrings(appLocaleForLanguage(s.get(defs.uiLanguage))),
+      ),
       onEvent: onEvent,
       log: (line) => log.info(name, line),
     );
@@ -4258,6 +4261,14 @@ class _VoiceMatch implements VoiceMatchPort {
   /// up) have none of their own, and the same person answers.
   Uint8List? _anchor;
 
+  /// Who Ground Control recognized in this conversation. A follow-up starts
+  /// with them, so a one-word answer like "yes" needs no identifying.
+  String? _speaker;
+
+  /// The conversation's session in Ground Control: a follow-up joins it, so
+  /// the Sessions page shows the conversation as one.
+  String? _conversation;
+
   @override
   VoiceMatchTurnPort? begin(
     void Function(Map<String, Object?> event) onEvent, {
@@ -4274,6 +4285,8 @@ class _VoiceMatch implements VoiceMatchPort {
     final clip = followup ? null : _voice._wakeWord.wakeClip();
     if (!followup) {
       _anchor = clip;
+      _speaker = null;
+      _conversation = null;
       _voice.log.info(
         _voice.name,
         clip == null
@@ -4298,10 +4311,18 @@ class _VoiceMatch implements VoiceMatchPort {
       deviceName: name,
       policy: policy,
       people: people,
-      onEvent: onEvent,
+      onEvent: (e) {
+        if (e['type'] == 'speaker' && e['id'] is String) {
+          _speaker = e['id'] as String;
+        }
+        onEvent(e);
+      },
       log: (line) => _voice.log.info(_voice.name, line),
       follow: follow,
       anchor: _anchor,
+      speaker: followup ? _speaker : null,
+      continues: followup ? _conversation : null,
+      onReady: (session) => _conversation = session,
       onAudio: onAudio,
       onLost: onLost,
     );

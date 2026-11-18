@@ -37,54 +37,6 @@ class VoiceMatchEnrollOverlay extends StatelessWidget {
       );
 }
 
-/// The passage, one sentence at a time, in this kiosk's language.
-List<String> enrollPassage(UiStrings t) => [
-  t.voiceMatchEnrollPassage1,
-  t.voiceMatchEnrollPassage2,
-  t.voiceMatchEnrollPassage3,
-  t.voiceMatchEnrollPassage4,
-  t.voiceMatchEnrollPassage5,
-  t.voiceMatchEnrollPassage6,
-  t.voiceMatchEnrollPassage7,
-  t.voiceMatchEnrollPassage8,
-  t.voiceMatchEnrollPassage9,
-  t.voiceMatchEnrollPassage10,
-  t.voiceMatchEnrollPassage11,
-  t.voiceMatchEnrollPassage12,
-  t.voiceMatchEnrollPassage13,
-  t.voiceMatchEnrollPassage14,
-];
-
-/// About how long [sentence] takes to read aloud, in seconds of speech:
-/// 14 letters a second, or 4.5 for Chinese characters, 1.5 s at least.
-double readingSeconds(String sentence) {
-  var latin = 0;
-  var wide = 0;
-  for (final rune in sentence.runes) {
-    if (rune >= 0x2E80) {
-      wide++;
-    } else if (rune > 0x20) {
-      latin++;
-    }
-  }
-  return math.max(1.5, latin / 14 + wide / 4.5);
-}
-
-/// Which sentence to show after [speechS] of [targetS] seconds of speech.
-/// The passage is spread over the target, so it ends as the enrollment
-/// does. It starts over when someone reads past it.
-int sentenceAt(List<String> passage, double speechS, double targetS) {
-  final lengths = [for (final s in passage) readingSeconds(s)];
-  final total = lengths.fold<double>(0, (a, b) => a + b);
-  if (total <= 0 || targetS <= 0) return 0;
-  var at = (speechS / targetS * total) % total;
-  for (var i = 0; i < lengths.length; i++) {
-    if (at < lengths[i]) return i;
-    at -= lengths[i];
-  }
-  return lengths.length - 1;
-}
-
 /// A person's ring color (`#RRGGBB`), or [fallback].
 Color personColor(String? hex, Color fallback) {
   final v = int.tryParse((hex ?? '').replaceFirst('#', ''), radix: 16);
@@ -145,7 +97,11 @@ class _ReadingState extends State<_Reading> {
     final s = widget.state;
     final color = personColor(s.color, scheme.primary);
     final passage = enrollPassage(t);
-    final at = sentenceAt(passage, s.speechS, s.targetS);
+    // Ground Control says which sentence to read and how much of it was
+    // spoken. An older one doesn't, and the kiosk paces it by speech.
+    final at = s.sentence != null
+        ? s.sentence! % passage.length
+        : sentenceAt(passage, s.speechS, s.targetS);
     final reading = s.phase == EnrollPhase.recording;
 
     return Material(
@@ -156,9 +112,12 @@ class _ReadingState extends State<_Reading> {
             final small = box.maxHeight < 440;
             final portrait = box.maxHeight > box.maxWidth * 1.1;
             final pad = small ? 16.0 : 28.0;
+            // Text and ring grow with the screen, so a tablet read from
+            // across the room isn't set in phone sizes.
+            final unit = math.min(box.maxWidth, box.maxHeight);
             final ringSize = math.min(
               portrait ? box.maxWidth * 0.42 : box.maxHeight * 0.38,
-              small ? 120.0 : 200.0,
+              small ? 120.0 : (unit * 0.36).clamp(200.0, 300.0),
             );
             final progress = _Progress(
               state: s,
@@ -169,8 +128,11 @@ class _ReadingState extends State<_Reading> {
             final text = _Passage(
               passage: passage,
               at: at,
+              fill: s.sentence != null ? s.sentenceFill : null,
+              color: color,
               phase: s.phase,
               small: small,
+              unit: unit,
             );
             return Padding(
               padding: EdgeInsets.fromLTRB(pad, pad * 0.75, pad, pad * 0.75),
@@ -195,7 +157,12 @@ class _ReadingState extends State<_Reading> {
                               (small
                                       ? theme.textTheme.titleMedium
                                       : theme.textTheme.titleLarge)
-                                  ?.copyWith(fontWeight: FontWeight.w500),
+                                  ?.copyWith(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: small
+                                        ? null
+                                        : (unit * 0.032).clamp(22.0, 30.0),
+                                  ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -227,7 +194,7 @@ class _ReadingState extends State<_Reading> {
                   Expanded(
                     child: Center(
                       child: ConstrainedBox(
-                        constraints: const BoxConstraints(maxWidth: 1000),
+                        constraints: const BoxConstraints(maxWidth: 1200),
                         child: portrait
                             ? Column(
                                 children: [
@@ -247,7 +214,7 @@ class _ReadingState extends State<_Reading> {
                       ),
                     ),
                   ),
-                  if (!small) _Tips(t: t),
+                  if (!small) _Tips(t: t, unit: unit),
                 ],
               ),
             );
@@ -312,6 +279,7 @@ class _Progress extends StatelessWidget {
                       '${state.targetS.round()}',
                     ),
                     style: theme.textTheme.titleMedium?.copyWith(
+                      fontSize: math.max(16, size * 0.12),
                       fontFeatures: const [FontFeature.tabularFigures()],
                     ),
                   ),
@@ -367,32 +335,47 @@ class _LevelMeter extends StatelessWidget {
   }
 }
 
-/// The sentence to read large, with the one before and the one after it.
+/// The sentence to read large, with the one before and the one after it,
+/// and under it a bar that fills in the person's color as it is spoken.
 class _Passage extends StatelessWidget {
   const _Passage({
     required this.passage,
     required this.at,
+    required this.fill,
+    required this.color,
     required this.phase,
     required this.small,
+    required this.unit,
   });
 
   final List<String> passage;
   final int at;
+
+  /// How much of the sentence was spoken, 0 to 1. Null without pacing.
+  final double? fill;
+  final Color color;
   final EnrollPhase phase;
   final bool small;
+
+  /// The screen's shorter side, which the text sizes follow.
+  final double unit;
 
   @override
   Widget build(BuildContext context) {
     final t = l10n(context);
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
+    final size = small ? 24.0 : (unit * 0.06).clamp(28.0, 56.0);
     final muted = theme.textTheme.titleMedium?.copyWith(
       color: scheme.onSurfaceVariant.withValues(alpha: 0.7),
+      fontSize: small ? null : size * 0.58,
       height: 1.3,
     );
-    final big =
-        (small ? theme.textTheme.headlineSmall : theme.textTheme.headlineMedium)
-            ?.copyWith(fontWeight: FontWeight.w500, height: 1.25);
+    final big = theme.textTheme.headlineMedium?.copyWith(
+      fontWeight: FontWeight.w500,
+      fontSize: size,
+      height: 1.25,
+    );
     final waiting = switch (phase) {
       EnrollPhase.starting => t.voiceMatchEnrollStarting,
       EnrollPhase.saving => t.voiceMatchEnrollSaving,
@@ -408,6 +391,7 @@ class _Passage extends StatelessWidget {
           t.voiceMatchEnrollReading.toUpperCase(),
           style: theme.textTheme.labelMedium?.copyWith(
             color: scheme.primary,
+            fontSize: small ? null : size * 0.32,
             letterSpacing: 1.2,
           ),
         ),
@@ -435,10 +419,28 @@ class _Passage extends StatelessWidget {
             waiting ?? passage[at],
             key: ValueKey(waiting ?? 'line$at'),
             style: big,
-            maxLines: 3,
+            maxLines: 4,
             overflow: TextOverflow.ellipsis,
           ),
         ),
+        if (fill != null && waiting == null) ...[
+          SizedBox(height: small ? 8 : 14),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: TweenAnimationBuilder<double>(
+              // A new sentence starts its bar empty.
+              key: ValueKey('fill$at'),
+              tween: Tween(begin: 0, end: fill!.clamp(0.0, 1.0)),
+              duration: const Duration(milliseconds: 250),
+              builder: (context, value, _) => LinearProgressIndicator(
+                value: value,
+                minHeight: small ? 5 : (size * 0.16).clamp(6.0, 10.0),
+                color: color,
+                backgroundColor: scheme.surfaceContainerHighest,
+              ),
+            ),
+          ),
+        ],
         SizedBox(height: small ? 8 : 12),
         if (waiting == null)
           Text(after, style: muted, maxLines: 2, overflow: TextOverflow.fade),
@@ -481,24 +483,27 @@ class _OtherVoiceBanner extends StatelessWidget {
 }
 
 class _Tips extends StatelessWidget {
-  const _Tips({required this.t});
+  const _Tips({required this.t, required this.unit});
 
   final UiStrings t;
+  final double unit;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
+    final size = (unit * 0.024).clamp(14.0, 22.0);
     Widget tip(IconData icon, String text) => Expanded(
       child: Row(
         children: [
-          Icon(icon, size: 22, color: scheme.onSurfaceVariant),
+          Icon(icon, size: size * 1.5, color: scheme.onSurfaceVariant),
           const SizedBox(width: 10),
           Expanded(
             child: Text(
               text,
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: scheme.onSurfaceVariant,
+                fontSize: size,
               ),
             ),
           ),
