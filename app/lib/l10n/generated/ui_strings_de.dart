@@ -15877,7 +15877,51 @@ class UiStringsDe extends UiStrings {
       'Verhindert den Start des Bildschirmschoners, solange die Timer-Ansicht einen laufenden Timer zeigt.';
 
   @override
-  String get voiceMatch => 'Voice Match';
+  String get settingTimersSilenceAfterTitle => 'Stumm nach';
+
+  @override
+  String get settingTimersSilenceAfterDescription =>
+      'Der abgelaufene Timer bleibt auf dem Bildschirm, bis er geschlossen wird.';
+
+  @override
+  String get settingTimersDismissAfterTitle => 'Schließen nach';
+
+  @override
+  String get settingTimersDismissAfterDescription =>
+      'Schließt einen abgelaufenen Timer, als wäre Schließen getippt worden.';
+
+  @override
+  String get voiceMatchGroundControlPage => 'Ground Control Voice Match';
+
+  @override
+  String get settingVoiceMatchPolicyDescriptionChosen =>
+      'Mit Ausgewählte Personen werden der Fernseher, Gäste und alle anderen ignoriert.';
+
+  @override
+  String get voiceMatchOptionPeople => 'Ausgewählte Personen';
+
+  @override
+  String get settingVoiceMatchPeopleTitle => 'Personen';
+
+  @override
+  String get settingVoiceMatchPeopleDescription =>
+      'Wem dieser Kiosk antwortet. Ist niemand ausgewählt, antwortet er allen eingelernten Personen.';
+
+  @override
+  String get voiceMatchPeopleNone => 'Alle eingelernten Personen';
+
+  @override
+  String get voiceMatchPeopleSearch => 'Personen suchen';
+
+  @override
+  String get voiceMatchPeopleEmpty =>
+      'In Ground Control ist noch niemand eingelernt.';
+
+  @override
+  String get voiceMatchPeopleGone => 'Nicht mehr in Ground Control';
+
+  @override
+  String get settingVoiceMatchRejectedTitleChosen => 'Stimme nicht ausgewählt';
 
   @override
   String get voiceMatchHint => 'Wer spricht, andere Stimmen, Einlernen';
@@ -15889,23 +15933,8 @@ class UiStringsDe extends UiStrings {
   String get settingVoiceMatchPolicyTitle => 'Antworten auf';
 
   @override
-  String get settingVoiceMatchPolicyDescription =>
-      'Nur eingelernte Stimmen ignoriert den Fernseher und Gäste.';
-
-  @override
-  String get settingVoiceMatchRejectedTitle => 'Stimme nicht eingelernt';
-
-  @override
   String get settingVoiceMatchRejectedDescription =>
       'Was passiert, wenn jemand anderes das Aktivierungswort sagt.';
-
-  @override
-  String get settingVoiceMatchEndOnOtherVoiceTitle =>
-      'Beenden, wenn jemand anderes spricht';
-
-  @override
-  String get settingVoiceMatchEndOnOtherVoiceDescription =>
-      'Beendet das Zuhören beim letzten Wort, wenn der Fernseher oder eine andere Person weiterspricht.';
 
   @override
   String get settingVoiceMatchSpeakerSensorTitle => 'Sprecher-Sensor';
@@ -15916,9 +15945,6 @@ class UiStringsDe extends UiStrings {
 
   @override
   String get voiceMatchOptionAnyone => 'Alle';
-
-  @override
-  String get voiceMatchOptionEnrolled => 'Nur eingelernte Stimmen';
 
   @override
   String get voiceMatchOptionQuiet => 'Still bleiben';
@@ -15969,6 +15995,13 @@ class UiStringsDe extends UiStrings {
   @override
   String get settingVoiceMatchAllowEnrollDescriptionGroundControl =>
       'Erlaubt der Ground Control App, die Stimme einer Person mit dem Mikrofon dieses Kiosks aufzunehmen. Der Kiosk zeigt den Text zum Vorlesen oder der Lichtring zeigt den Fortschritt.';
+
+  @override
+  String get settingVoiceMatchLeaveOutTitle => 'Andere Stimmen weglassen';
+
+  @override
+  String get settingVoiceMatchLeaveOutDescription =>
+      'Home Assistant und der Echtzeit-Assistent hören nur die Person, die das Aktivierungswort gesagt hat, und der Befehl endet, wenn sie aufhört zu sprechen, auch wenn der Fernseher läuft.';
 
   @override
   String get voiceWakePage => 'Aktivierungswort';

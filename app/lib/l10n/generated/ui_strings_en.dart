@@ -15556,7 +15556,51 @@ class UiStringsEn extends UiStrings {
       'Keep the screensaver from starting while the Timers view shows a running timer.';
 
   @override
-  String get voiceMatch => 'Voice Match';
+  String get settingTimersSilenceAfterTitle => 'Silence after';
+
+  @override
+  String get settingTimersSilenceAfterDescription =>
+      'The finished timer stays on screen until it is dismissed.';
+
+  @override
+  String get settingTimersDismissAfterTitle => 'Dismiss after';
+
+  @override
+  String get settingTimersDismissAfterDescription =>
+      'Clears a finished timer as if Dismiss was tapped.';
+
+  @override
+  String get voiceMatchGroundControlPage => 'Ground Control Voice Match';
+
+  @override
+  String get settingVoiceMatchPolicyDescriptionChosen =>
+      'Chosen people ignores the TV, guests and everyone else.';
+
+  @override
+  String get voiceMatchOptionPeople => 'Chosen people';
+
+  @override
+  String get settingVoiceMatchPeopleTitle => 'People';
+
+  @override
+  String get settingVoiceMatchPeopleDescription =>
+      'Who this kiosk answers. With nobody chosen, it answers anyone enrolled.';
+
+  @override
+  String get voiceMatchPeopleNone => 'Anyone enrolled';
+
+  @override
+  String get voiceMatchPeopleSearch => 'Search people';
+
+  @override
+  String get voiceMatchPeopleEmpty =>
+      'Nobody is enrolled in Ground Control yet.';
+
+  @override
+  String get voiceMatchPeopleGone => 'No longer in Ground Control';
+
+  @override
+  String get settingVoiceMatchRejectedTitleChosen => 'Voice not chosen';
 
   @override
   String get voiceMatchHint => 'Who is talking, other voices, enrollment';
@@ -15568,23 +15612,8 @@ class UiStringsEn extends UiStrings {
   String get settingVoiceMatchPolicyTitle => 'Answer';
 
   @override
-  String get settingVoiceMatchPolicyDescription =>
-      'Enrolled voices only ignores the TV and guests.';
-
-  @override
-  String get settingVoiceMatchRejectedTitle => 'Voice not enrolled';
-
-  @override
   String get settingVoiceMatchRejectedDescription =>
       'What happens when someone else says the wake word.';
-
-  @override
-  String get settingVoiceMatchEndOnOtherVoiceTitle =>
-      'End when someone else talks';
-
-  @override
-  String get settingVoiceMatchEndOnOtherVoiceDescription =>
-      'Stops listening at the last word when the TV or another person keeps talking.';
 
   @override
   String get settingVoiceMatchSpeakerSensorTitle => 'Speaker sensor';
@@ -15595,9 +15624,6 @@ class UiStringsEn extends UiStrings {
 
   @override
   String get voiceMatchOptionAnyone => 'Anyone';
-
-  @override
-  String get voiceMatchOptionEnrolled => 'Enrolled voices only';
 
   @override
   String get voiceMatchOptionQuiet => 'Stay quiet';
@@ -15647,6 +15673,13 @@ class UiStringsEn extends UiStrings {
   @override
   String get settingVoiceMatchAllowEnrollDescriptionGroundControl =>
       'Lets the Ground Control app record a person\'s voice with this kiosk\'s microphone. The kiosk shows the text to read, or the light ring shows the progress.';
+
+  @override
+  String get settingVoiceMatchLeaveOutTitle => 'Leave other voices out';
+
+  @override
+  String get settingVoiceMatchLeaveOutDescription =>
+      'Home Assistant and the realtime assistant hear only the person who said the wake word, and the command ends when they stop, even with the TV on.';
 
   @override
   String get voiceWakePage => 'Wake Word';

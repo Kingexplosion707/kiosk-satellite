@@ -2056,6 +2056,14 @@ const settingMessageIds = <String, Map<String, String>>{
     "title": "settingVoiceMuteTimersTitle",
     "description": "settingVoiceMuteTimersDescription",
   },
+  "timers.silence_after": {
+    "title": "settingTimersSilenceAfterTitle",
+    "description": "settingTimersSilenceAfterDescription",
+  },
+  "timers.dismiss_after": {
+    "title": "settingTimersDismissAfterTitle",
+    "description": "settingTimersDismissAfterDescription",
+  },
   "voice.timer_alert_pill": {
     "title": "settingVoiceTimerAlertPillTitle",
     "description": "settingVoiceTimerAlertPillDescription",
@@ -2770,15 +2778,19 @@ const settingMessageIds = <String, Map<String, String>>{
   },
   "voice_match.policy": {
     "title": "settingVoiceMatchPolicyTitle",
-    "description": "settingVoiceMatchPolicyDescription",
+    "description": "settingVoiceMatchPolicyDescriptionChosen",
+  },
+  "voice_match.people": {
+    "title": "settingVoiceMatchPeopleTitle",
+    "description": "settingVoiceMatchPeopleDescription",
   },
   "voice_match.rejected": {
-    "title": "settingVoiceMatchRejectedTitle",
+    "title": "settingVoiceMatchRejectedTitleChosen",
     "description": "settingVoiceMatchRejectedDescription",
   },
   "voice_match.end_on_other_voice": {
-    "title": "settingVoiceMatchEndOnOtherVoiceTitle",
-    "description": "settingVoiceMatchEndOnOtherVoiceDescription",
+    "title": "settingVoiceMatchLeaveOutTitle",
+    "description": "settingVoiceMatchLeaveOutDescription",
   },
   "voice_match.speaker_sensor": {
     "title": "settingVoiceMatchSpeakerSensorTitle",

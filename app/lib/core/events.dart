@@ -554,8 +554,27 @@ class GroundControlServiceChanged extends AppEvent {
 /// Who is talking on this kiosk, for the Speaker sensor and the lights.
 /// Empty when nobody is identified (a new turn, an unknown voice).
 class VoiceSpeakerChanged extends AppEvent {
-  const VoiceSpeakerChanged(this.name, {this.color});
+  const VoiceSpeakerChanged(
+    this.name, {
+    this.color,
+    this.id,
+    this.by,
+    this.score,
+  });
+
+  /// Empty when a turn starts and for a voice nobody enrolled. That one
+  /// has a [score], a new turn has none.
   final String name;
+
+  /// How close the voice was to the person's, 0 to 1. Null when a turn
+  /// starts and when the only person enrolled was taken without a check.
+  final double? score;
+
+  /// Ground Control's person id, null for a voice nobody enrolled.
+  final String? id;
+
+  /// How the voice was placed: `voice`, `wake_word` or `only_person`.
+  final String? by;
 
   /// The person's ring color in Voice Match, `#RRGGBB`.
   final String? color;
@@ -1403,6 +1422,15 @@ class VoiceTimerAction extends AppEvent {
 class SharedTimerAlertChanged extends AppEvent {
   const SharedTimerAlertChanged(this.ringing);
   final bool ringing;
+}
+
+/// The timer ring on this kiosk went quiet under Silence after, or rings
+/// again for a timer that finished since. The finished timers stay on
+/// screen while it is quiet, so native Voice Satellite keeps the stop word
+/// but lets the music back.
+class TimerRingQuiet extends AppEvent {
+  const TimerRingQuiet(this.quiet);
+  final bool quiet;
 }
 
 /// The stop word, the action button or a cancel asked to end the ringing

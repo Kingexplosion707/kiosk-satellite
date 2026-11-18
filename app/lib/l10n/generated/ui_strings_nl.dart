@@ -15735,7 +15735,51 @@ class UiStringsNl extends UiStrings {
       'Voorkomt dat de schermbeveiliging start terwijl de timerweergave een lopende timer toont.';
 
   @override
-  String get voiceMatch => 'Voice Match';
+  String get settingTimersSilenceAfterTitle => 'Dempen na';
+
+  @override
+  String get settingTimersSilenceAfterDescription =>
+      'De afgelopen timer blijft op het scherm tot hij wordt gesloten.';
+
+  @override
+  String get settingTimersDismissAfterTitle => 'Sluiten na';
+
+  @override
+  String get settingTimersDismissAfterDescription =>
+      'Sluit een afgelopen timer alsof op Sluiten is getikt.';
+
+  @override
+  String get voiceMatchGroundControlPage => 'Ground Control Voice Match';
+
+  @override
+  String get settingVoiceMatchPolicyDescriptionChosen =>
+      'Met Gekozen personen worden de tv, gasten en alle anderen genegeerd.';
+
+  @override
+  String get voiceMatchOptionPeople => 'Gekozen personen';
+
+  @override
+  String get settingVoiceMatchPeopleTitle => 'Personen';
+
+  @override
+  String get settingVoiceMatchPeopleDescription =>
+      'Wie deze kiosk antwoordt. Als niemand gekozen is, antwoordt hij iedereen die is ingeschreven.';
+
+  @override
+  String get voiceMatchPeopleNone => 'Iedereen die is ingeschreven';
+
+  @override
+  String get voiceMatchPeopleSearch => 'Personen zoeken';
+
+  @override
+  String get voiceMatchPeopleEmpty =>
+      'Er is nog niemand ingeschreven in Ground Control.';
+
+  @override
+  String get voiceMatchPeopleGone => 'Niet meer in Ground Control';
+
+  @override
+  String get settingVoiceMatchRejectedTitleChosen => 'Stem niet gekozen';
 
   @override
   String get voiceMatchHint => 'Wie er praat, andere stemmen, inschrijven';
@@ -15747,23 +15791,8 @@ class UiStringsNl extends UiStrings {
   String get settingVoiceMatchPolicyTitle => 'Antwoorden op';
 
   @override
-  String get settingVoiceMatchPolicyDescription =>
-      'Alleen ingeschreven stemmen negeert de tv en gasten.';
-
-  @override
-  String get settingVoiceMatchRejectedTitle => 'Stem niet ingeschreven';
-
-  @override
   String get settingVoiceMatchRejectedDescription =>
       'Wat er gebeurt als iemand anders het wekwoord zegt.';
-
-  @override
-  String get settingVoiceMatchEndOnOtherVoiceTitle =>
-      'Stoppen als iemand anders praat';
-
-  @override
-  String get settingVoiceMatchEndOnOtherVoiceDescription =>
-      'Stopt met luisteren bij het laatste woord als de tv of iemand anders blijft praten.';
 
   @override
   String get settingVoiceMatchSpeakerSensorTitle => 'Sprekersensor';
@@ -15774,9 +15803,6 @@ class UiStringsNl extends UiStrings {
 
   @override
   String get voiceMatchOptionAnyone => 'Iedereen';
-
-  @override
-  String get voiceMatchOptionEnrolled => 'Alleen ingeschreven stemmen';
 
   @override
   String get voiceMatchOptionQuiet => 'Stil blijven';
@@ -15827,6 +15853,13 @@ class UiStringsNl extends UiStrings {
   @override
   String get settingVoiceMatchAllowEnrollDescriptionGroundControl =>
       'Laat de Ground Control app iemands stem opnemen met de microfoon van deze kiosk. De kiosk toont de tekst om voor te lezen of de lichtring toont de voortgang.';
+
+  @override
+  String get settingVoiceMatchLeaveOutTitle => 'Andere stemmen weglaten';
+
+  @override
+  String get settingVoiceMatchLeaveOutDescription =>
+      'Home Assistant en de realtime assistent horen alleen de persoon die het activatiewoord zei, en het commando stopt als die stopt met praten, ook met de tv aan.';
 
   @override
   String get voiceWakePage => 'Wekwoorden';

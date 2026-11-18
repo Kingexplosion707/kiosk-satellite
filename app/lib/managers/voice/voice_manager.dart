@@ -371,12 +371,7 @@ class VoiceManager extends Manager {
       onTrace: _trace,
       onIdle: _resumeWake,
       voiceMatch: _VoiceMatch(this),
-      onSpeaker: (e) => bus.publish(
-        VoiceSpeakerChanged(
-          '${e?['name'] ?? ''}',
-          color: e?['color'] is String ? e!['color'] as String : null,
-        ),
-      ),
+      onSpeaker: _publishSpeaker,
     );
     _subs.add(
       bus.on<GroundControlServiceChanged>().listen(
@@ -407,6 +402,8 @@ class VoiceManager extends Manager {
       },
       onIdle: _resumeWake,
       location: realtimeLocation,
+      voiceMatch: _VoiceMatch(this),
+      onSpeaker: _publishSpeaker,
     );
     _enroller = VoiceMatchEnroller(
       mic: _WakeMic(_wakeWord),
@@ -513,6 +510,12 @@ class VoiceManager extends Manager {
       ..add(
         bus.on<SharedTimerAlertChanged>().listen((e) {
           _sharedRinging = e.ringing;
+          _syncTimerHold();
+        }),
+      )
+      ..add(
+        bus.on<TimerRingQuiet>().listen((e) {
+          _ringQuiet = e.quiet;
           _syncTimerHold();
         }),
       )
@@ -2328,6 +2331,8 @@ class VoiceManager extends Manager {
     ),
     language: _settings.get(defs.uiLanguage),
     historyHours: _settings.get(defs.voiceRealtimeHistoryHours).toDouble(),
+    follow: _settings.get(defs.voiceMatchEndOnOtherVoice),
+    rejectChime: _settings.get(defs.voiceMatchRejected) == 'chime',
   );
 
   String _location = '';
@@ -2971,6 +2976,17 @@ class VoiceManager extends Manager {
     }
     _session.dismiss();
   }
+
+  /// Who is talking, for the Speaker sensor and the lights.
+  void _publishSpeaker(Map<String, Object?>? e) => bus.publish(
+    VoiceSpeakerChanged(
+      '${e?['name'] ?? ''}',
+      color: e?['color'] is String ? e!['color'] as String : null,
+      id: e?['id'] is String ? e!['id'] as String : null,
+      by: e?['by'] is String ? e!['by'] as String : null,
+      score: e?['score'] is num ? (e!['score'] as num).toDouble() : null,
+    ),
+  );
 
   // ── Voice Match enrollment ─────────────────────────────────────────────
 
@@ -3755,16 +3771,21 @@ class VoiceManager extends Manager {
   /// Timers other kiosks share are ringing here.
   bool _sharedRinging = false;
 
+  /// The ring went quiet under Silence after while the alert still shows.
+  bool _ringQuiet = false;
+
   /// While a timer rings, this kiosk's own or a shared one, the stop word
   /// listens and the screen is held as for a voice turn. The ring holds the
   /// stop word under its own name: an announcement or a turn that ends
-  /// while it rings lets go of the voice holder only (issue #1478).
+  /// while it rings lets go of the voice holder only (issue #1478). Once
+  /// the ring goes quiet, the stop word still dismisses the alert but the
+  /// music comes back.
   void _syncTimerHold() {
-    if (_ringing.isNotEmpty || _sharedRinging) {
+    final ringing = _ringing.isNotEmpty || _sharedRinging;
+    unawaited(_wakeWord.setStopWordArmed(ringing, holder: 'timer'));
+    if (ringing && !_ringQuiet) {
       _onBusy(true, 'timer');
-      unawaited(_wakeWord.setStopWordArmed(true, holder: 'timer'));
     } else {
-      unawaited(_wakeWord.setStopWordArmed(false, holder: 'timer'));
       if (_busyReasons.remove('timer')) {
         bus.publish(
           const VoiceInteractionChanged(
@@ -4233,21 +4254,56 @@ class _VoiceMatch implements VoiceMatchPort {
   _VoiceMatch(this._voice);
   final VoiceManager _voice;
 
+  /// The wake word that started the conversation: later turns (a follow
+  /// up) have none of their own, and the same person answers.
+  Uint8List? _anchor;
+
   @override
-  VoiceMatchTurnPort? begin(void Function(Map<String, Object?> event) onEvent) {
+  VoiceMatchTurnPort? begin(
+    void Function(Map<String, Object?> event) onEvent, {
+    bool follow = false,
+    bool followup = false,
+    void Function(Uint8List pcm)? onAudio,
+    void Function()? onLost,
+  }) {
     final url = _voice._groundControlUrl;
     final s = _voice._settings;
     // The address is only known while Ground Control is connected.
     if (url == null || !s.get(defs.voiceMatchEnabled)) return null;
     final name = s.get(defs.deviceName).trim();
+    final clip = followup ? null : _voice._wakeWord.wakeClip();
+    if (!followup) {
+      _anchor = clip;
+      _voice.log.info(
+        _voice.name,
+        clip == null
+            ? 'voice match: no wake word, following who talks'
+            : 'voice match: following the wake word '
+                  '(${clip.length ~/ 32} ms)',
+      );
+    }
+    // Chosen people with nobody chosen answers anyone enrolled.
+    final people = [
+      for (final p in defs.decodeVoiceMatchPeople(s.get(defs.voiceMatchPeople)))
+        p.id,
+    ];
+    final chosen = s.get(defs.voiceMatchPolicy) == 'people';
+    final policy = !chosen
+        ? 'anyone'
+        : (people.isEmpty ? 'enrolled' : 'people');
     final turn = VoiceMatchTurn.open(
       baseUrl: url,
       token: s.get(defs.haToken),
       deviceId: defs.effectiveHostname(s.get(defs.deviceHostname), name),
       deviceName: name,
-      policy: s.get(defs.voiceMatchPolicy),
+      policy: policy,
+      people: people,
       onEvent: onEvent,
       log: (line) => _voice.log.info(_voice.name, line),
+      follow: follow,
+      anchor: _anchor,
+      onAudio: onAudio,
+      onLost: onLost,
     );
     return _Turn(turn);
   }
@@ -4262,4 +4318,7 @@ class _Turn implements VoiceMatchTurnPort {
 
   @override
   void end() => _turn.end();
+
+  @override
+  bool get ready => _turn.ready;
 }

@@ -15852,7 +15852,51 @@ class UiStringsFr extends UiStrings {
       'Empêche l\'économiseur d\'écran de démarrer tant que la vue des minuteurs affiche un minuteur en cours.';
 
   @override
-  String get voiceMatch => 'Voice Match';
+  String get settingTimersSilenceAfterTitle => 'Silence après';
+
+  @override
+  String get settingTimersSilenceAfterDescription =>
+      'Le minuteur terminé reste à l\'écran jusqu\'à ce qu\'il soit ignoré.';
+
+  @override
+  String get settingTimersDismissAfterTitle => 'Ignorer après';
+
+  @override
+  String get settingTimersDismissAfterDescription =>
+      'Ignore un minuteur terminé comme si vous aviez appuyé sur Ignorer.';
+
+  @override
+  String get voiceMatchGroundControlPage => 'Ground Control Voice Match';
+
+  @override
+  String get settingVoiceMatchPolicyDescriptionChosen =>
+      'Avec Personnes choisies, la télé, les invités et tous les autres sont ignorés.';
+
+  @override
+  String get voiceMatchOptionPeople => 'Personnes choisies';
+
+  @override
+  String get settingVoiceMatchPeopleTitle => 'Personnes';
+
+  @override
+  String get settingVoiceMatchPeopleDescription =>
+      'À qui ce kiosque répond. Si personne n\'est choisi, il répond à toute personne enregistrée.';
+
+  @override
+  String get voiceMatchPeopleNone => 'Toute personne enregistrée';
+
+  @override
+  String get voiceMatchPeopleSearch => 'Rechercher des personnes';
+
+  @override
+  String get voiceMatchPeopleEmpty =>
+      'Personne n\'est encore enregistré dans Ground Control.';
+
+  @override
+  String get voiceMatchPeopleGone => 'N\'est plus dans Ground Control';
+
+  @override
+  String get settingVoiceMatchRejectedTitleChosen => 'Voix non choisie';
 
   @override
   String get voiceMatchHint =>
@@ -15865,23 +15909,8 @@ class UiStringsFr extends UiStrings {
   String get settingVoiceMatchPolicyTitle => 'Répondre à';
 
   @override
-  String get settingVoiceMatchPolicyDescription =>
-      'Voix enregistrées uniquement ignore la télé et les invités.';
-
-  @override
-  String get settingVoiceMatchRejectedTitle => 'Voix non enregistrée';
-
-  @override
   String get settingVoiceMatchRejectedDescription =>
       'Ce qui se passe quand quelqu\'un d\'autre dit le mot de réveil.';
-
-  @override
-  String get settingVoiceMatchEndOnOtherVoiceTitle =>
-      'Arrêter quand quelqu\'un d\'autre parle';
-
-  @override
-  String get settingVoiceMatchEndOnOtherVoiceDescription =>
-      'Arrête l\'écoute au dernier mot quand la télé ou une autre personne continue de parler.';
 
   @override
   String get settingVoiceMatchSpeakerSensorTitle => 'Capteur de locuteur';
@@ -15892,9 +15921,6 @@ class UiStringsFr extends UiStrings {
 
   @override
   String get voiceMatchOptionAnyone => 'Tout le monde';
-
-  @override
-  String get voiceMatchOptionEnrolled => 'Voix enregistrées uniquement';
 
   @override
   String get voiceMatchOptionQuiet => 'Rester silencieux';
@@ -15946,6 +15972,13 @@ class UiStringsFr extends UiStrings {
   @override
   String get settingVoiceMatchAllowEnrollDescriptionGroundControl =>
       'Permet à l\'app Ground Control d\'enregistrer la voix d\'une personne avec le micro de ce kiosque. Le kiosque affiche le texte à lire, ou l\'anneau lumineux affiche la progression.';
+
+  @override
+  String get settingVoiceMatchLeaveOutTitle => 'Écarter les autres voix';
+
+  @override
+  String get settingVoiceMatchLeaveOutDescription =>
+      'Home Assistant et l\'assistant en temps réel n\'entendent que la personne qui a dit le mot d\'activation, et la commande se termine quand elle s\'arrête, même avec la télé allumée.';
 
   @override
   String get voiceWakePage => 'Mot de réveil';

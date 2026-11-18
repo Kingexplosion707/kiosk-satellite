@@ -3164,6 +3164,13 @@ class _CategoryContentState extends State<_CategoryContent> {
         id: voiceTimersShareWith.key,
         child: SharedTimersShareWithRow(container: container),
       ),
+    // The people a kiosk on Chosen people answers: names and a checkbox
+    // list of everyone enrolled in Ground Control. Mirrored on the remote.
+    if (widget.category == 'Voice Satellite')
+      voiceMatchPeople.key: SearchLandingTarget(
+        id: voiceMatchPeople.key,
+        child: VoiceMatchPeopleRow(container: container),
+      ),
     if (widget.category == 'Voice Satellite')
       voiceTtsOutput.key: SearchLandingTarget(
         id: voiceTtsOutput.key,
@@ -4732,7 +4739,7 @@ extension on _CategoryContentState {
           'Wake Word',
           'Assistant',
           'Realtime',
-          'Voice Match',
+          'Ground Control Voice Match',
           'Appearance',
           'Conversation',
           'Chimes',

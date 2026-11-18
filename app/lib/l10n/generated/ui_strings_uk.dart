@@ -15717,7 +15717,51 @@ class UiStringsUk extends UiStrings {
       'Заставка не запускається, поки вигляд таймерів показує активний таймер.';
 
   @override
-  String get voiceMatch => 'Voice Match';
+  String get settingTimersSilenceAfterTitle => 'Вимкнути звук через';
+
+  @override
+  String get settingTimersSilenceAfterDescription =>
+      'Завершений таймер лишається на екрані, доки його не закрито.';
+
+  @override
+  String get settingTimersDismissAfterTitle => 'Закрити через';
+
+  @override
+  String get settingTimersDismissAfterDescription =>
+      'Закриває завершений таймер, ніби торкнулися «Закрити».';
+
+  @override
+  String get voiceMatchGroundControlPage => 'Ground Control Voice Match';
+
+  @override
+  String get settingVoiceMatchPolicyDescriptionChosen =>
+      'З вибраними людьми кіоск ігнорує телевізор, гостей і всіх інших.';
+
+  @override
+  String get voiceMatchOptionPeople => 'Вибрані люди';
+
+  @override
+  String get settingVoiceMatchPeopleTitle => 'Люди';
+
+  @override
+  String get settingVoiceMatchPeopleDescription =>
+      'Кому відповідає цей кіоск. Якщо нікого не вибрано, він відповідає будь-кому із зареєстрованих.';
+
+  @override
+  String get voiceMatchPeopleNone => 'Будь-хто із зареєстрованих';
+
+  @override
+  String get voiceMatchPeopleSearch => 'Пошук людей';
+
+  @override
+  String get voiceMatchPeopleEmpty =>
+      'У Ground Control ще ніхто не зареєстрований.';
+
+  @override
+  String get voiceMatchPeopleGone => 'Більше немає в Ground Control';
+
+  @override
+  String get settingVoiceMatchRejectedTitleChosen => 'Голос не вибрано';
 
   @override
   String get voiceMatchHint => 'Хто говорить, інші голоси, реєстрація голосу';
@@ -15729,23 +15773,8 @@ class UiStringsUk extends UiStrings {
   String get settingVoiceMatchPolicyTitle => 'Відповідати';
 
   @override
-  String get settingVoiceMatchPolicyDescription =>
-      '«Лише зареєстровані голоси» ігнорує телевізор і гостей.';
-
-  @override
-  String get settingVoiceMatchRejectedTitle => 'Голос не зареєстровано';
-
-  @override
   String get settingVoiceMatchRejectedDescription =>
       'Що відбувається, коли слово активації каже хтось інший.';
-
-  @override
-  String get settingVoiceMatchEndOnOtherVoiceTitle =>
-      'Завершувати, коли говорить хтось інший';
-
-  @override
-  String get settingVoiceMatchEndOnOtherVoiceDescription =>
-      'Припиняє слухати на останньому слові, коли телевізор або інша людина продовжує говорити.';
 
   @override
   String get settingVoiceMatchSpeakerSensorTitle => 'Датчик мовця';
@@ -15756,9 +15785,6 @@ class UiStringsUk extends UiStrings {
 
   @override
   String get voiceMatchOptionAnyone => 'Будь-кому';
-
-  @override
-  String get voiceMatchOptionEnrolled => 'Лише зареєстровані голоси';
 
   @override
   String get voiceMatchOptionQuiet => 'Мовчати';
@@ -15809,6 +15835,13 @@ class UiStringsUk extends UiStrings {
   @override
   String get settingVoiceMatchAllowEnrollDescriptionGroundControl =>
       'Дозволяє застосунку Ground Control записувати голос людини мікрофоном цього кіоску. Кіоск показує текст для читання, або світлове кільце показує прогрес.';
+
+  @override
+  String get settingVoiceMatchLeaveOutTitle => 'Не враховувати інші голоси';
+
+  @override
+  String get settingVoiceMatchLeaveOutDescription =>
+      'Home Assistant і асистент у реальному часі чують лише людину, яка сказала слово активації, і команда завершується, коли вона замовкає, навіть коли увімкнений телевізор.';
 
   @override
   String get voiceWakePage => 'Слово активації';

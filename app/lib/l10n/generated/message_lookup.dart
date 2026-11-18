@@ -5370,26 +5370,37 @@ String messageById(UiStrings strings, String? id, String fallback) =>
         strings.settingTimersPauseScreensaverTitle,
       'settingTimersPauseScreensaverDescription' =>
         strings.settingTimersPauseScreensaverDescription,
-      'voiceMatch' => strings.voiceMatch,
+      'settingTimersSilenceAfterTitle' =>
+        strings.settingTimersSilenceAfterTitle,
+      'settingTimersSilenceAfterDescription' =>
+        strings.settingTimersSilenceAfterDescription,
+      'settingTimersDismissAfterTitle' =>
+        strings.settingTimersDismissAfterTitle,
+      'settingTimersDismissAfterDescription' =>
+        strings.settingTimersDismissAfterDescription,
+      'voiceMatchGroundControlPage' => strings.voiceMatchGroundControlPage,
+      'settingVoiceMatchPolicyDescriptionChosen' =>
+        strings.settingVoiceMatchPolicyDescriptionChosen,
+      'voiceMatchOptionPeople' => strings.voiceMatchOptionPeople,
+      'settingVoiceMatchPeopleTitle' => strings.settingVoiceMatchPeopleTitle,
+      'settingVoiceMatchPeopleDescription' =>
+        strings.settingVoiceMatchPeopleDescription,
+      'voiceMatchPeopleNone' => strings.voiceMatchPeopleNone,
+      'voiceMatchPeopleSearch' => strings.voiceMatchPeopleSearch,
+      'voiceMatchPeopleEmpty' => strings.voiceMatchPeopleEmpty,
+      'voiceMatchPeopleGone' => strings.voiceMatchPeopleGone,
+      'settingVoiceMatchRejectedTitleChosen' =>
+        strings.settingVoiceMatchRejectedTitleChosen,
       'voiceMatchHint' => strings.voiceMatchHint,
       'settingVoiceMatchEnabledTitle' => strings.settingVoiceMatchEnabledTitle,
       'settingVoiceMatchPolicyTitle' => strings.settingVoiceMatchPolicyTitle,
-      'settingVoiceMatchPolicyDescription' =>
-        strings.settingVoiceMatchPolicyDescription,
-      'settingVoiceMatchRejectedTitle' =>
-        strings.settingVoiceMatchRejectedTitle,
       'settingVoiceMatchRejectedDescription' =>
         strings.settingVoiceMatchRejectedDescription,
-      'settingVoiceMatchEndOnOtherVoiceTitle' =>
-        strings.settingVoiceMatchEndOnOtherVoiceTitle,
-      'settingVoiceMatchEndOnOtherVoiceDescription' =>
-        strings.settingVoiceMatchEndOnOtherVoiceDescription,
       'settingVoiceMatchSpeakerSensorTitle' =>
         strings.settingVoiceMatchSpeakerSensorTitle,
       'settingVoiceMatchSpeakerSensorDescription' =>
         strings.settingVoiceMatchSpeakerSensorDescription,
       'voiceMatchOptionAnyone' => strings.voiceMatchOptionAnyone,
-      'voiceMatchOptionEnrolled' => strings.voiceMatchOptionEnrolled,
       'voiceMatchOptionQuiet' => strings.voiceMatchOptionQuiet,
       'voiceMatchOptionChime' => strings.voiceMatchOptionChime,
       'voiceMatchConnecting' => strings.voiceMatchConnecting,
@@ -5410,6 +5421,10 @@ String messageById(UiStrings strings, String? id, String fallback) =>
         strings.settingVoiceMatchEnabledDescriptionGroundControl,
       'settingVoiceMatchAllowEnrollDescriptionGroundControl' =>
         strings.settingVoiceMatchAllowEnrollDescriptionGroundControl,
+      'settingVoiceMatchLeaveOutTitle' =>
+        strings.settingVoiceMatchLeaveOutTitle,
+      'settingVoiceMatchLeaveOutDescription' =>
+        strings.settingVoiceMatchLeaveOutDescription,
       'voiceWakePage' => strings.voiceWakePage,
       'voiceWakeHint' => strings.voiceWakeHint,
       'voiceWakeLabel' => strings.voiceWakeLabel,

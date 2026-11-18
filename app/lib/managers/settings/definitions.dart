@@ -277,7 +277,7 @@ const Map<String, String> subpageHints = {
   // Native Voice Satellite's own pages.
   'Assistant': 'Pipelines, follow-ups',
   'Realtime': 'OpenAI, xAI Grok, Gemini, tools, talk over answers',
-  'Voice Match': 'Who is talking, other voices, enrollment',
+  'Ground Control Voice Match': 'Who is talking, other voices, enrollment',
   'Conversation': 'What the overlay shows and for how long',
   // Its entry row sits under the tester, not with the three pages above.
   'Wake word diagnostics':
@@ -8143,51 +8143,106 @@ const voiceMatchEnabled = SettingDef<bool>(
       'Recognize who is talking and stop listening when someone else takes '
       'over. Needs Ground Control.',
   category: 'Voice Satellite',
-  subpage: 'Voice Match',
+  subpage: 'Ground Control Voice Match',
   dependsOn: 'voice.enabled',
   alsoDependsOn: 'ground_control.enabled',
 );
 
-/// Who this kiosk answers: anyone, or only voices enrolled in Voice Match.
+/// Who this kiosk answers: anyone, or only the people chosen in
+/// [voiceMatchPeople].
 const voiceMatchPolicy = SettingDef<String>(
   key: 'voice_match.policy',
   type: SettingType.select,
   defaultValue: 'anyone',
   title: 'Answer',
-  description: 'Enrolled voices only ignores the TV and guests.',
+  description: 'Chosen people ignores the TV, guests and everyone else.',
   category: 'Voice Satellite',
-  subpage: 'Voice Match',
+  subpage: 'Ground Control Voice Match',
   section: 'Listening',
-  options: ['anyone', 'enrolled'],
-  optionLabels: {'anyone': 'Anyone', 'enrolled': 'Enrolled voices only'},
+  options: ['anyone', 'people'],
+  optionLabels: {'anyone': 'Anyone', 'people': 'Chosen people'},
   dependsOn: 'voice_match.enabled',
+);
+
+/// The people this kiosk answers with [voiceMatchPolicy] on Chosen people,
+/// as a JSON list of `{id, name}`: the name keeps a pick readable while
+/// Ground Control is away. Nobody chosen answers anyone enrolled.
+const voiceMatchPeople = SettingDef<String>(
+  key: 'voice_match.people',
+  type: SettingType.string,
+  defaultValue: '[]',
+  title: 'People',
+  description:
+      'Who this kiosk answers. With nobody chosen, it answers anyone '
+      'enrolled.',
+  category: 'Voice Satellite',
+  subpage: 'Ground Control Voice Match',
+  section: 'Listening',
+  dependsOn: 'voice_match.policy',
+  dependsOnValue: 'people',
+  normalizer: normalizeVoiceMatchPeople,
+);
+
+/// One person picked in [voiceMatchPeople].
+typedef VoiceMatchPick = ({String id, String name});
+
+/// [voiceMatchPeople] read back, in order, each person once. Empty for a
+/// value that does not parse.
+List<VoiceMatchPick> decodeVoiceMatchPeople(String value) {
+  try {
+    final decoded = jsonDecode(value);
+    if (decoded is! List) return const [];
+    final seen = <String>{};
+    return [
+      for (final p in decoded)
+        if (p is Map && p['id'] is String && (p['id'] as String).isNotEmpty)
+          if (seen.add(p['id'] as String))
+            (
+              id: p['id'] as String,
+              name: p['name'] is String ? p['name'] as String : '',
+            ),
+    ];
+  } catch (_) {
+    return const [];
+  }
+}
+
+String encodeVoiceMatchPeople(List<VoiceMatchPick> people) => jsonEncode([
+  for (final p in people) {'id': p.id, 'name': p.name},
+]);
+
+/// Stores [voiceMatchPeople] as a clean list, so a hand-written API value
+/// that is not one reads as nobody chosen.
+Object normalizeVoiceMatchPeople(Object value) => encodeVoiceMatchPeople(
+  decodeVoiceMatchPeople(value is String ? value : ''),
 );
 
 const voiceMatchRejected = SettingDef<String>(
   key: 'voice_match.rejected',
   type: SettingType.select,
   defaultValue: 'quiet',
-  title: 'Voice not enrolled',
+  title: 'Voice not chosen',
   description: 'What happens when someone else says the wake word.',
   category: 'Voice Satellite',
-  subpage: 'Voice Match',
+  subpage: 'Ground Control Voice Match',
   section: 'Listening',
   options: ['quiet', 'chime'],
   optionLabels: {'quiet': 'Stay quiet', 'chime': 'Play the error chime'},
   dependsOn: 'voice_match.policy',
-  dependsOnValue: 'enrolled',
+  dependsOnValue: 'people',
 );
 
 const voiceMatchEndOnOtherVoice = SettingDef<bool>(
   key: 'voice_match.end_on_other_voice',
   type: SettingType.boolean,
   defaultValue: true,
-  title: 'End when someone else talks',
+  title: 'Leave other voices out',
   description:
-      'Stops listening at the last word when the TV or another person keeps '
-      'talking.',
+      'Home Assistant and the realtime assistant hear only the person who '
+      'said the wake word, and the command ends when they stop, even with '
+      'the TV on.',
   category: 'Voice Satellite',
-  subpage: 'Voice Match',
+  subpage: 'Ground Control Voice Match',
   section: 'Listening',
   dependsOn: 'voice_match.enabled',
 );
@@ -8203,7 +8258,7 @@ const voiceMatchSpeakerSensor = SettingDef<bool>(
       'Adds a Speaker sensor to this kiosk in Home Assistant, for automations '
       'and agent instructions.',
   category: 'Voice Satellite',
-  subpage: 'Voice Match',
+  subpage: 'Ground Control Voice Match',
   section: 'Speaker',
   dependsOn: 'voice_match.enabled',
 );
@@ -8218,7 +8273,7 @@ const voiceMatchShowSpeaker = SettingDef<bool>(
       'color. On a device with a light ring, the listening arc takes the '
       'color.',
   category: 'Voice Satellite',
-  subpage: 'Voice Match',
+  subpage: 'Ground Control Voice Match',
   section: 'Speaker',
   dependsOn: 'voice_match.enabled',
 );
@@ -8233,7 +8288,7 @@ const voiceMatchAllowEnroll = SettingDef<bool>(
       'microphone. The kiosk shows the text to read, or the light ring '
       'shows the progress.',
   category: 'Voice Satellite',
-  subpage: 'Voice Match',
+  subpage: 'Ground Control Voice Match',
   section: 'Speaker',
   dependsOn: 'voice_match.enabled',
 );
@@ -8715,6 +8770,50 @@ const voiceMuteTimers = SettingDef<bool>(
   category: 'Timers',
   section: 'When a timer ends',
   dependsOn: 'voice.enabled',
+);
+
+/// The choices of Silence after and Dismiss after, in seconds. 0 never
+/// does it.
+const _timerAlertLimits = ['0', '30', '60', '120', '300', '600', '900', '1800'];
+const _timerAlertLimitLabels = {
+  '0': 'Never',
+  '30': '30 seconds',
+  '60': '1 minute',
+  '120': '2 minutes',
+  '300': '5 minutes',
+  '600': '10 minutes',
+  '900': '15 minutes',
+  '1800': '30 minutes',
+};
+
+/// How long a finished timer rings before the sound stops. The alert stays
+/// on screen until it is dismissed. It counts from the last timer that
+/// finished, and covers the timers other kiosks share too.
+const timersSilenceAfter = SettingDef<String>(
+  key: 'timers.silence_after',
+  type: SettingType.select,
+  defaultValue: '0',
+  title: 'Silence after',
+  description: 'The finished timer stays on screen until it is dismissed.',
+  category: 'Timers',
+  section: 'When a timer ends',
+  options: _timerAlertLimits,
+  optionLabels: _timerAlertLimitLabels,
+);
+
+/// How long this kiosk's own finished timers stay before they are
+/// dismissed as a tap on Dismiss does. A timer another kiosk shares
+/// follows the setting of the kiosk it came from.
+const timersDismissAfter = SettingDef<String>(
+  key: 'timers.dismiss_after',
+  type: SettingType.select,
+  defaultValue: '0',
+  title: 'Dismiss after',
+  description: 'Clears a finished timer as if Dismiss was tapped.',
+  category: 'Timers',
+  section: 'When a timer ends',
+  options: _timerAlertLimits,
+  optionLabels: _timerAlertLimitLabels,
 );
 
 const voiceTimerNameOnAlert = SettingDef<bool>(
@@ -14969,6 +15068,7 @@ const List<SettingDef<Object>> allSettings = [
   groundControlAddress,
   voiceMatchEnabled,
   voiceMatchPolicy,
+  voiceMatchPeople,
   voiceMatchRejected,
   voiceMatchEndOnOtherVoice,
   voiceMatchSpeakerSensor,
@@ -15009,6 +15109,8 @@ const List<SettingDef<Object>> allSettings = [
   voiceChimeTimer,
   voiceChimeTimerVolume,
   voiceMuteTimers,
+  timersSilenceAfter,
+  timersDismissAfter,
   voiceTimerSpeak,
   voiceTimerPhrase,
   voiceTimerNamedPhrase,
