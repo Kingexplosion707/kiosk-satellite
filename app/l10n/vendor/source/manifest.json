@@ -1,7 +1,7 @@
 {
   "schema": 2,
   "repository": "https://github.com/jxlarrea/kiosk-satellite",
-  "revision": "df94af52ccf124508787f935548f4da9836ff851",
+  "revision": "6bf94b40e83064ba10cb73a6bf1782f3a21d4666",
   "workingTree": true,
   "files": {
     "about_identity_en.arb": "dd006567f69f846e2e3b73f09ad13784f0022d282ea3101fa9be7fc95175ec2d",
@@ -110,7 +110,7 @@
     "settings_esphome_setup_en.arb": "c4c7a944ea206ffc62f04ecfb5936b9d17eaf0a85abee2222cdd2ae74cf5bb90",
     "settings_footer_en.arb": "2b6279c9f3a304b5ad3fe7aec3e8dcd07ada7704de51489dc2f6866d147950a4",
     "settings_gestures_en.arb": "30a3d7c7867d80faeed298d2e11e46bbd99182f4d58d8e585faadbec551939f0",
-    "settings_ground_control_en.arb": "a95742405ea6f890ed9111d8d4345613486c05d418feb41575927c15c66499be",
+    "settings_ground_control_en.arb": "d8dfceb8940f3027b3afdd0ff31cec715eb92ac0632c9a0b3bebeeea40f72bd1",
     "settings_home_assistant_custom_pages_en.arb": "7ff2971d55e9fce55f50423c185d357ddd1c2f1af72a3ab09947713a03789bf7",
     "settings_home_assistant_hold_en.arb": "65c0336973aa9ced2a0ceff298a569b2a6d034c2016569727f3a84de2fe819b2",
     "settings_home_assistant_optimizations_en.arb": "6848f403e77ebbe6a51c201b09cbc75c385debfbce96168830772418b7afdcf7",
@@ -124,7 +124,7 @@
     "settings_intercom_answer_en.arb": "59118996cc16690318a3b0a59c3c6455808f7b405606c1ece8491b6b049a8c7d",
     "settings_intercom_general_en.arb": "3a1d3535b855b5658be40b64a8e04c759bb6a1690a28d3283befaeda2c829d29",
     "settings_intercom_kiosks_en.arb": "135b6b4da593ab57a523e70d84494c604d036d6da47d869407d3c03a20ba072e",
-    "settings_intercom_talk_en.arb": "2802b9745497417a7d9a8c3cedd3432429745151232cc1a054c4b24f3e14b33a",
+    "settings_intercom_talk_en.arb": "8217c2816880d610609554ef8be56e8bbd4d34b3be65fb1ea5397c70d21ff582",
     "settings_kiosk_allowed_actions_en.arb": "5a6cc45d7cab99b61e7c59f475fadcc6b78fea740916d0f14c81e459116a35cc",
     "settings_kiosk_general_en.arb": "a45e0a0510b43f5a2f6f0deb5a508ddd31e2fb9ce5a69a1af9f2e4f1a4fe11a3",
     "settings_kiosk_permissions_en.arb": "686c9c49e03d50ec06070dbbf9717bccf2916fc68464d2ac12c4de3cd7f2e337",

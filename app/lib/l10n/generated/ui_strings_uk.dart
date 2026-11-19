@@ -8548,6 +8548,26 @@ class UiStringsUk extends UiStrings {
   String get groundControlApp => 'Застосунок Ground Control';
 
   @override
+  String get groundControlFeatures => 'Функції';
+
+  @override
+  String get settingGroundControlVoiceMatchTitle => 'Voice Match';
+
+  @override
+  String get settingGroundControlVoiceMatchDescription =>
+      'Розпізнавання мовця, вилучення інших голосів і реєстрація.';
+
+  @override
+  String get groundControlVisionMatch => 'Vision Match';
+
+  @override
+  String get groundControlVisionMatchDescription =>
+      'Розпізнавання облич за допомогою камери цього пристрою.';
+
+  @override
+  String get groundControlComingSoon => 'Незабаром';
+
+  @override
   String get haCustomPages => 'Власні сторінки';
 
   @override
@@ -9373,6 +9393,19 @@ class UiStringsUk extends UiStrings {
 
   @override
   String get intercomOptionHangupRingingIgnore => 'Ігнорувати';
+
+  @override
+  String get settingIntercomCallButtonsTitle => 'Кнопки виклику';
+
+  @override
+  String get settingIntercomCallButtonsDescription =>
+      'Кнопки на екрані кіоску, якому ви телефонуєте. Натискання виконує дію на цьому кіоску.';
+
+  @override
+  String get intercomCallButtonsAdd => 'Додати кнопку';
+
+  @override
+  String get intercomCallButtonIcon => 'Значок';
 
   @override
   String get intercomTalkSection => 'Розмова';

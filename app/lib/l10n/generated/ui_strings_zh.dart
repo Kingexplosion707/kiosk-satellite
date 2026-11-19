@@ -8127,6 +8127,24 @@ class UiStringsZh extends UiStrings {
   String get groundControlApp => 'Ground Control 应用';
 
   @override
+  String get groundControlFeatures => '功能';
+
+  @override
+  String get settingGroundControlVoiceMatchTitle => 'Voice Match';
+
+  @override
+  String get settingGroundControlVoiceMatchDescription => '说话人识别、其他声音移除和录入。';
+
+  @override
+  String get groundControlVisionMatch => 'Vision Match';
+
+  @override
+  String get groundControlVisionMatchDescription => '使用此设备的摄像头进行人脸识别。';
+
+  @override
+  String get groundControlComingSoon => '即将推出';
+
+  @override
   String get haCustomPages => '自定义网页';
 
   @override
@@ -8889,6 +8907,19 @@ class UiStringsZh extends UiStrings {
 
   @override
   String get intercomOptionHangupRingingIgnore => '忽略';
+
+  @override
+  String get settingIntercomCallButtonsTitle => '通话按钮';
+
+  @override
+  String get settingIntercomCallButtonsDescription =>
+      '显示在被呼叫 Kiosk 设备屏幕上的按钮。点击后在此 Kiosk 设备上执行操作。';
+
+  @override
+  String get intercomCallButtonsAdd => '添加按钮';
+
+  @override
+  String get intercomCallButtonIcon => '图标';
 
   @override
   String get intercomTalkSection => '讲话';
@@ -24259,6 +24290,24 @@ class UiStringsZhCn extends UiStringsZh {
   String get groundControlApp => 'Ground Control 应用';
 
   @override
+  String get groundControlFeatures => '功能';
+
+  @override
+  String get settingGroundControlVoiceMatchTitle => 'Voice Match';
+
+  @override
+  String get settingGroundControlVoiceMatchDescription => '说话人识别、其他声音移除和录入。';
+
+  @override
+  String get groundControlVisionMatch => 'Vision Match';
+
+  @override
+  String get groundControlVisionMatchDescription => '使用此设备的摄像头进行人脸识别。';
+
+  @override
+  String get groundControlComingSoon => '即将推出';
+
+  @override
   String get haCustomPages => '自定义网页';
 
   @override
@@ -25021,6 +25070,19 @@ class UiStringsZhCn extends UiStringsZh {
 
   @override
   String get intercomOptionHangupRingingIgnore => '忽略';
+
+  @override
+  String get settingIntercomCallButtonsTitle => '通话按钮';
+
+  @override
+  String get settingIntercomCallButtonsDescription =>
+      '显示在被呼叫 Kiosk 设备屏幕上的按钮。点击后在此 Kiosk 设备上执行操作。';
+
+  @override
+  String get intercomCallButtonsAdd => '添加按钮';
+
+  @override
+  String get intercomCallButtonIcon => '图标';
 
   @override
   String get intercomTalkSection => '讲话';

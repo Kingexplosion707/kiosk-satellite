@@ -8571,6 +8571,26 @@ class UiStringsNl extends UiStrings {
   String get groundControlApp => 'Ground Control app';
 
   @override
+  String get groundControlFeatures => 'Functies';
+
+  @override
+  String get settingGroundControlVoiceMatchTitle => 'Voice Match';
+
+  @override
+  String get settingGroundControlVoiceMatchDescription =>
+      'Sprekerherkenning, verwijderen van andere stemmen en inschrijven.';
+
+  @override
+  String get groundControlVisionMatch => 'Vision Match';
+
+  @override
+  String get groundControlVisionMatchDescription =>
+      'Gezichtsherkenning met de camera van dit apparaat.';
+
+  @override
+  String get groundControlComingSoon => 'Binnenkort';
+
+  @override
   String get haCustomPages => 'Eigen pagina\'s';
 
   @override
@@ -9393,6 +9413,19 @@ class UiStringsNl extends UiStrings {
 
   @override
   String get intercomOptionHangupRingingIgnore => 'Negeren';
+
+  @override
+  String get settingIntercomCallButtonsTitle => 'Belknoppen';
+
+  @override
+  String get settingIntercomCallButtonsDescription =>
+      'Knoppen op het scherm van de kiosk die je belt. Een tik voert de actie uit op deze kiosk.';
+
+  @override
+  String get intercomCallButtonsAdd => 'Knop toevoegen';
+
+  @override
+  String get intercomCallButtonIcon => 'Pictogram';
 
   @override
   String get intercomTalkSection => 'Praten';

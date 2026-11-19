@@ -1424,6 +1424,10 @@ const settingMessageIds = <String, Map<String, String>>{
     "title": "settingIntercomHangupKeyRingingTitle",
     "description": "settingIntercomHangupKeyRingingDescription",
   },
+  "intercom.call_buttons": {
+    "title": "settingIntercomCallButtonsTitle",
+    "description": "settingIntercomCallButtonsDescription",
+  },
   "kiosk.enabled": {
     "title": "settingKioskEnabledTitle",
     "description": "settingKioskEnabledDescription",
@@ -2811,5 +2815,9 @@ const settingMessageIds = <String, Map<String, String>>{
   "ground_control.address": {
     "title": "settingGroundControlAddressTitle",
     "description": "settingGroundControlAddressDescription",
+  },
+  "ground_control.voice_match": {
+    "title": "settingGroundControlVoiceMatchTitle",
+    "description": "settingGroundControlVoiceMatchDescription",
   },
 };

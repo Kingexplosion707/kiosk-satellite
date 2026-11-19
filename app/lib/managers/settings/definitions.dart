@@ -1414,6 +1414,9 @@ const kioskAllowedApps = SettingDef<String>(
 // gesture below replaces the kiosk one, so the two can share a value
 // without ever being armed together.
 
+// Per device (issue #1505): the switch is this kiosk's live state, and a
+// fleet sync would unlock a follower locked on its own. The rest of the
+// Lockdown setup still travels with its category.
 const lockdownEnabled = SettingDef<bool>(
   key: 'lockdown.enabled',
   type: SettingType.boolean,
@@ -1423,6 +1426,7 @@ const lockdownEnabled = SettingDef<bool>(
       'Disables screen interactions until turned off either from Home '
       'Assistant or with the exit gesture.',
   category: 'Lockdown',
+  perDevice: true,
 );
 
 /// Where the kiosk menu's Lockdown Mode row had its own switch. A link to
@@ -8131,6 +8135,21 @@ const groundControlAddress = SettingDef<String>(
   dependsOn: 'ground_control.enabled',
 );
 
+/// Ground Control's features, each a row under Features that opens its page:
+/// Voice Match lives under Voice Satellite. Vision Match, coming soon,
+/// is a row of its own under this one (GroundControlComingSoonRow, and
+/// ground_control.js on the remote).
+const groundControlVoiceMatch = SettingDef<bool>(
+  key: 'ground_control.voice_match',
+  type: SettingType.boolean,
+  defaultValue: false,
+  title: 'Voice Match',
+  description: 'Speaker recognition, other voices removal and enrollment.',
+  category: 'Ground Control',
+  section: 'Features',
+  linksTo: 'voice_match.enabled',
+);
+
 // Voice Match: Ground Control tells who is talking and when someone else (a
 // TV) starts, so a turn ends at the speaker's last word.
 
@@ -9735,6 +9754,8 @@ const haReturnHomeSeconds = SettingDef<num>(
 /// every surface stays in step and the state survives a restart. While on,
 /// the screensaver will not start, dashboard view rotation freezes in
 /// place, the return-home timer stands down and the display stays awake.
+/// Per device (issue #1505): it is this kiosk's live state, and a fleet
+/// sync would turn a follower's hold off again within minutes.
 const haHoldMode = SettingDef<bool>(
   key: 'ha.hold_mode',
   type: SettingType.boolean,
@@ -9746,6 +9767,7 @@ const haHoldMode = SettingDef<bool>(
   category: 'Home Assistant',
   section: 'Hold mode',
   subpage: 'Hold mode',
+  perDevice: true,
 );
 
 /// The forgotten-hold guard: a kiosk left on hold overnight never sleeps
@@ -12551,6 +12573,26 @@ const intercomHangupKeyRinging = SettingDef<String>(
   perDevice: true,
 );
 
+/// Buttons this kiosk puts on the screen of the kiosk it calls (issue
+/// #1504), such as Open gate on a kiosk by the gate. A JSON list of
+/// `{label, icon, action}`, the action a gesture action object. A tap on
+/// the other kiosk comes back here and runs the action on this kiosk. Kept
+/// on the kiosk it belongs to: an Open gate pushed to every kiosk in a
+/// fleet would show on every call.
+const intercomCallButtons = SettingDef<String>(
+  key: 'intercom.call_buttons',
+  type: SettingType.string,
+  defaultValue: '[]',
+  title: 'Call buttons',
+  description:
+      'Buttons on the screen of the kiosk you call. A tap runs the action '
+      'on this kiosk.',
+  category: 'Intercom',
+  section: 'Call buttons',
+  dependsOn: 'intercom.enabled',
+  perDevice: true,
+);
+
 /// Android KeyEvent codes for [intercomHangupKey]'s options.
 const intercomHangupKeyCodes = {
   'volume_up': 24,
@@ -15066,6 +15108,7 @@ const List<SettingDef<Object>> allSettings = [
   voiceRealtimeMcpToken,
   groundControlEnabled,
   groundControlAddress,
+  groundControlVoiceMatch,
   voiceMatchEnabled,
   voiceMatchPolicy,
   voiceMatchPeople,
@@ -15347,6 +15390,7 @@ const List<SettingDef<Object>> allSettings = [
   intercomMaxCallMinutes,
   intercomHangupKey,
   intercomHangupKeyRinging,
+  intercomCallButtons,
   intercomVideo,
   intercomVideoQuality,
   intercomTls,

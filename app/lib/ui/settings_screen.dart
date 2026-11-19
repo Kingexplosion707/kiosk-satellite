@@ -3145,6 +3145,13 @@ class _CategoryContentState extends State<_CategoryContent> {
   /// key and handed to every render of the category, the pages below it
   /// included, so a replacement follows its row onto its page.
   Map<String, Widget> _rowReplacements(AppContainer container) => {
+    // The buttons this kiosk puts on the screen of the kiosk it calls, in
+    // the plugin list editor. Mirrored on the remote (intercom.js).
+    if (widget.category == 'Intercom')
+      intercomCallButtons.key: SearchLandingTarget(
+        id: intercomCallButtons.key,
+        child: IntercomCallButtonsRow(container: container),
+      ),
     if (widget.category == 'ESPHome')
       esphomeExcludedEntities.key: SearchLandingTarget(
         id: esphomeExcludedEntities.key,
@@ -3435,6 +3442,8 @@ class _CategoryContentState extends State<_CategoryContent> {
     // Ground Control: whether the service was found, who is enrolled and
     // Open for its app.
     groundControlEnabled.key: GroundControlStatusRow(container: container),
+    // Under Features: what Ground Control will do next.
+    groundControlVoiceMatch.key: const GroundControlComingSoonRow(),
     if (widget.category == 'Sendspin')
       sendspinDuckPercent.key: AlbumArtCacheRow(container: container),
     // Under the key's copy box: paste one from another kiosk or make a

@@ -8478,6 +8478,26 @@ class UiStringsEn extends UiStrings {
   String get groundControlApp => 'Ground Control app';
 
   @override
+  String get groundControlFeatures => 'Features';
+
+  @override
+  String get settingGroundControlVoiceMatchTitle => 'Voice Match';
+
+  @override
+  String get settingGroundControlVoiceMatchDescription =>
+      'Speaker recognition, other voices removal and enrollment.';
+
+  @override
+  String get groundControlVisionMatch => 'Vision Match';
+
+  @override
+  String get groundControlVisionMatchDescription =>
+      'Facial recognition using this device\'s camera.';
+
+  @override
+  String get groundControlComingSoon => 'Coming soon';
+
+  @override
   String get haCustomPages => 'Custom Pages';
 
   @override
@@ -9290,6 +9310,19 @@ class UiStringsEn extends UiStrings {
 
   @override
   String get intercomOptionHangupRingingIgnore => 'Ignore';
+
+  @override
+  String get settingIntercomCallButtonsTitle => 'Call buttons';
+
+  @override
+  String get settingIntercomCallButtonsDescription =>
+      'Buttons on the screen of the kiosk you call. A tap runs the action on this kiosk.';
+
+  @override
+  String get intercomCallButtonsAdd => 'Add a button';
+
+  @override
+  String get intercomCallButtonIcon => 'Icon';
 
   @override
   String get intercomTalkSection => 'Talk';
