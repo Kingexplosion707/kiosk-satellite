@@ -523,6 +523,12 @@ class VoiceManager extends Manager {
       )
       ..add(
         bus.on<SettingChanged>().listen((e) {
+          // Timers turned off: what this kiosk holds goes, and a ringing
+          // timer stops (issue #1508).
+          if (e.key == defs.timersEnabled.key &&
+              !_settings.get(defs.timersEnabled)) {
+            unawaited(_dropTimers());
+          }
           if (e.key == defs.voiceRuntime.key ||
               e.key == defs.voiceEnabled.key ||
               e.key == defs.voiceMute.key ||
@@ -1067,6 +1073,9 @@ class VoiceManager extends Manager {
             'seconds': '0..59',
           },
           handler: (p) async {
+            if (!_settings.get(defs.timersEnabled)) {
+              return const CommandResult.fail('timers are off on this kiosk');
+            }
             final hours = (p['hours'] as num?)?.toInt() ?? 0;
             final minutes = (p['minutes'] as num?)?.toInt() ?? 0;
             final seconds = (p['seconds'] as num?)?.toInt() ?? 0;
@@ -1110,6 +1119,9 @@ class VoiceManager extends Manager {
             'seconds': 'for add and remove',
           },
           handler: (p) async {
+            if (!_settings.get(defs.timersEnabled)) {
+              return const CommandResult.fail('timers are off on this kiosk');
+            }
             int amount(String key) =>
                 ((p[key] as num?)?.toInt() ?? 0).clamp(0, 604800);
             final error = await controlTimer(
@@ -3415,7 +3427,26 @@ class VoiceManager extends Manager {
 
   // ── timers ─────────────────────────────────────────────────────────────
 
+  /// Forgets this kiosk's timers and stops a ringing one. The running and
+  /// paused ones are cancelled in Home Assistant first: it keeps them once
+  /// the kiosk stops offering timers, and one that ended after timers came
+  /// back on would ring for a timer the kiosk no longer showed.
+  Future<void> _dropTimers() async {
+    if (_ringing.isNotEmpty) _dismissAlert();
+    for (final id in [..._timers.keys]) {
+      final error = await controlTimer(id, 'cancel');
+      if (error != null) log.warn(name, 'timer $id not cancelled: $error');
+    }
+    if (_timers.isEmpty) return;
+    _timers.clear();
+    _pushTimers();
+    _publishTimers();
+  }
+
   void _onTimerEvent(Map<String, Object?> fields) {
+    // Until the ESPHome server restarts, Home Assistant still sends the
+    // events of timers it holds for this kiosk.
+    if (!_settings.get(defs.timersEnabled)) return;
     final id = '${fields['id'] ?? ''}';
     if (id.isEmpty) return;
     final type = (fields['type'] as num?)?.toInt() ?? -1;
